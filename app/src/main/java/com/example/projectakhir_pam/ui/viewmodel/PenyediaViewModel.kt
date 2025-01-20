@@ -18,7 +18,7 @@ object PenyediaViewModel{
         initializer {
             HomeViewModel(
                 BimbelApplications()
-                    .container
+                    .sisContainer
                     .siswaRepository
             )
         }
@@ -27,7 +27,7 @@ object PenyediaViewModel{
         initializer {
             InsertViewModel(
                 BimbelApplications()
-                    .container
+                    .sisContainer
                     .siswaRepository
             )
         }
@@ -37,7 +37,7 @@ object PenyediaViewModel{
             DetailViewModel(
                 createSavedStateHandle(),
                 BimbelApplications()
-                    .container
+                    .sisContainer
                     .siswaRepository
             )
         }
@@ -47,7 +47,7 @@ object PenyediaViewModel{
             UpdateViewModel(
                 createSavedStateHandle(),
                 BimbelApplications()
-                    .container
+                    .sisContainer
                     .siswaRepository
             )
         }
