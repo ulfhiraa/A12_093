@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.projectakhir_pam.ui.navigasi.PengelolaHalaman
 import com.example.projectakhir_pam.ui.theme.ProjectAkhir_PAMTheme
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.SiswaApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProjectAkhir_PAMTheme {
-                SiswaApp()
+                PengelolaHalaman()
             }
         }
     }
