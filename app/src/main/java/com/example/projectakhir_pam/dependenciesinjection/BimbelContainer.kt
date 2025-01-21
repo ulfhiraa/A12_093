@@ -19,7 +19,10 @@ interface CourseContainer{
 
 // untuk menyediakan
 class BimbelContainer : CourseContainer{
-    private val baseUrl = "http://10.0.2.2:3000/api/siswa/" // untuk mengakses API
+    private val baseUrl = "http://10.0.2.2:3000/api/siswa/" // url data siswa
+//    private val baseUrl = "http://10.0.2.2:3000/api/instruktur/" // url data instruktur
+//    private val baseUrl = "http://10.0.2.2:3000/api/pendaftaran/" // url data pendaftaran
+//    private val baseUrl = "http://10.0.2.2:3000/api/kursus/" // url data kursus
 
     private val json = Json { ignoreUnknownKeys = true } //  mengatur format data JSON.
 
