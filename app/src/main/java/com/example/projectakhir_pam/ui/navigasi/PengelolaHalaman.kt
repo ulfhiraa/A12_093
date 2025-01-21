@@ -8,14 +8,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiHomeInst
+import com.example.projectakhir_pam.ui.view.Instruktur.HomeInstView
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntrySis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHomeSis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdateSis
-import com.example.projectakhir_pam.ui.view.Siswa.DetailView
-import com.example.projectakhir_pam.ui.view.Siswa.HomeView
+import com.example.projectakhir_pam.ui.view.Siswa.DetailSisView
+import com.example.projectakhir_pam.ui.view.Siswa.HomeSisView
 import com.example.projectakhir_pam.ui.view.Siswa.InsertSisView
-import com.example.projectakhir_pam.ui.view.Siswa.UpdateView
+import com.example.projectakhir_pam.ui.view.Siswa.UpdateSisView
 
 // mengatur navigasi halaman
 
@@ -30,7 +32,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         // HOME SISWA
         composable(DestinasiHomeSis.route)
         {
-            HomeView(
+            HomeSisView(
                 navigateToItemEntry =
                 {
                     navController.navigate(DestinasiEntrySis.route)
@@ -67,7 +69,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         ) {
             val id_siswa = it.arguments?.getString(DestinasiDetailSis.id_siswa)
             id_siswa?.let { id_siswa ->
-                DetailView(
+                DetailSisView(
                     navigateBack = {
                         navController.popBackStack()
                     }
@@ -86,7 +88,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         ) {
             val id_siswa = it.arguments?.getString(DestinasiUpdateSis.id_siswa)
             id_siswa?.let { id_siswa ->
-                UpdateView(
+                UpdateSisView(
                     navigateBack = {
                         navController.popBackStack()
                     },
@@ -96,4 +98,75 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
             }
         }
     }
+
+    // == DATA INSTRUKTUR ==
+
+    // HOME INSTRUKTUR
+    composable(DestinasiHomeInst.route)
+    {
+        HomeInstView(
+            navigateToItemEntry =
+            {
+                navController.navigate(DestinasiEntryInst.route)
+            },
+            onDetailInstClick =
+            {
+                navController.navigate("${DestinasiDetailInst.route}/$it")
+            },
+            onEditInstClick = {
+                navController.navigate("${DestinasiUpdateInst.route}/$it")
+            }
+        )
+    }
+
+//    // TAMBAH INSTRUKTUR
+//    composable(DestinasiEntryInst.route) {
+//        InsertInstView(navigateBack = {
+//            navController.navigate(DestinasiHomeInst.route) {
+//                popUpTo(DestinasiHomeInst.route) {
+//                    inclusive = true
+//                }
+//            }
+//        })
+//    }
+//
+//    // DETAIL INSTRUKTUR
+//    composable(
+//        DestinasiDetailInst.routeWithArgs,
+//        arguments = listOf(
+//            navArgument(DestinasiDetailInst.id_instruktur) {
+//                type = NavType.StringType
+//            }
+//        )
+//    ) {
+//        val id_instruktur = it.arguments?.getString(DestinasiDetailInst.id_instruktur)
+//        id_instruktur?.let { id_instruktur ->
+//            DetailView(
+//                navigateBack = {
+//                    navController.popBackStack()
+//                }
+//            )
+//        }
+//    }
+//
+//    // UPDATE INSTRUKTUR
+//    composable(
+//        DestinasiUpdateSis.routeWithArgs,
+//        arguments = listOf(
+//            navArgument(DestinasiUpdateSis.id_siswa) {
+//                type = NavType.StringType
+//            }
+//        )
+//    ) {
+//        val id_siswa = it.arguments?.getString(DestinasiUpdateSis.id_siswa)
+//        id_siswa?.let { id_siswa ->
+//            UpdateView(
+//                navigateBack = {
+//                    navController.popBackStack()
+//                },
+//                onNavigateUp =  {
+//                    navController.navigate(DestinasiHomeSis.route) }
+//            )
+//        }
+//    }
 }
