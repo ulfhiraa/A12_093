@@ -8,11 +8,10 @@ import androidx.lifecycle.viewModelScope
 import coil.network.HttpException
 import com.example.projectakhir_pam.model.Instruktur
 import com.example.projectakhir_pam.repository.InstrukturRepository
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisUiState
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-// HomeViewModel : mengelola data dan status tampilan (UI) terkait data siswa
+// HomeViewModel : mengelola data dan status tampilan (UI) terkait data instruktur
 
 sealed class HomeInstUiState {
     data class Success(val instruktur: List<Instruktur>) : HomeInstUiState()
@@ -47,9 +46,9 @@ class HomeInstViewModel(private val inst: InstrukturRepository) : ViewModel() {
             try {
                 inst.deleteInstruktur(id_instruktur)
             } catch (e: IOException){
-                HomeSisUiState.Error
+                HomeInstUiState.Error
             } catch (e: HttpException){
-                HomeSisUiState.Error
+                HomeInstUiState.Error
             }
         }
     }
