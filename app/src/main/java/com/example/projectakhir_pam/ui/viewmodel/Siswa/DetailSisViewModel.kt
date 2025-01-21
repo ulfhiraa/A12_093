@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projectakhir_pam.model.Siswa
 import com.example.projectakhir_pam.repository.SiswaRepository
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetail
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
 import kotlinx.coroutines.launch
 
 // Detail viewmodel : untuk mengelola pengambilan dan penghapusan data siswa berdasarkan id dan pembaruan UI State
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class DetailSisViewModel(savedStateHandle: SavedStateHandle,
                       private val siswaRepository: SiswaRepository) : ViewModel()
 {
-    private val id_siswa: String = checkNotNull(savedStateHandle[DestinasiDetail.id_siswa])
+    private val id_siswa: String = checkNotNull(savedStateHandle[DestinasiDetailSis.id_siswa])
 
     var detailSisUiState: DetailSisUiState by mutableStateOf(DetailSisUiState())
         private set
