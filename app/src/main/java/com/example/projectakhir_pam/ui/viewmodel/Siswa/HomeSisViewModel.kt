@@ -15,14 +15,14 @@ import java.io.IOException
 // ViewModel ini berinteraksi dengan SiswaRepository untuk mengambil atau menghapus data siswa dan memperbarui status UI.
 
 // untuk menggambarkan status UI (apakah data sedang dimuat, berhasil dimuat, atau terjadi error).
-sealed class HomeUiState {
-    data class Success(val siswa: List<Siswa>) : HomeUiState()
-    object Error : HomeUiState()
-    object Loading : HomeUiState()
+sealed class HomeSisUiState {
+    data class Success(val siswa: List<Siswa>) : HomeSisUiState()
+    object Error : HomeSisUiState()
+    object Loading : HomeSisUiState()
 }
 
-class HomeViewModel(private val sis: SiswaRepository) : ViewModel() {
-    var sisUIState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+class HomeSisViewModel(private val sis: SiswaRepository) : ViewModel() {
+    var sisUIState: HomeSisUiState by mutableStateOf(HomeSisUiState.Loading)
         private set
 
     init {
@@ -31,13 +31,13 @@ class HomeViewModel(private val sis: SiswaRepository) : ViewModel() {
 
     fun getSis() {
         viewModelScope.launch {
-            sisUIState = HomeUiState.Loading
+            sisUIState = HomeSisUiState.Loading
             sisUIState = try {
-                HomeUiState.Success(sis.getSiswa().data)
+                HomeSisUiState.Success(sis.getSiswa().data)
             } catch (e: IOException) {
-                HomeUiState.Error
+                HomeSisUiState.Error
             } catch (e: HttpException) {
-                HomeUiState.Error
+                HomeSisUiState.Error
             }
         }
     }
@@ -48,9 +48,9 @@ class HomeViewModel(private val sis: SiswaRepository) : ViewModel() {
             try {
                 sis.deleteSiswa(id_siswa)
             } catch (e: IOException){
-                HomeUiState.Error
+                HomeSisUiState.Error
             } catch (e: HttpException){
-                HomeUiState.Error
+                HomeSisUiState.Error
             }
         }
     }

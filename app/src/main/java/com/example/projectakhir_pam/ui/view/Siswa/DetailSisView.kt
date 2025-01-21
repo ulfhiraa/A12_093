@@ -37,8 +37,8 @@ import com.example.projectakhir_pam.model.Siswa
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailUiState
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailSisUiState
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailSisViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.toSis
 
 // detail view : agar detail dapat ditampilkan dan data dapat diedit, dan dihapus
@@ -57,7 +57,7 @@ fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delet
     navigateBack: () -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit = { },
-    viewModel: DetailViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: DetailSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -90,7 +90,7 @@ fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delet
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         BodyDetailSis(
-            detailUiState = viewModel.detailUiState,
+            detailUiState = viewModel.detailSisUiState,
             modifier = Modifier.padding(innerPadding),
             onDeleteClick = {
                 deleteConfirmationRequired = true
@@ -117,7 +117,7 @@ fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delet
 @Composable
 fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
     modifier: Modifier = Modifier,
-    detailUiState: DetailUiState,
+    detailUiState: DetailSisUiState,
     onDeleteClick: () -> Unit
 ) {
     when {
@@ -147,7 +147,7 @@ fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
                     .padding(16.dp)
             ) {
                 ItemDetailSis(
-                    siswa = detailUiState.detailUiEvent.toSis(),
+                    siswa = detailUiState.detailSisUiEvent.toSis(),
                     modifier = modifier
                 )
 

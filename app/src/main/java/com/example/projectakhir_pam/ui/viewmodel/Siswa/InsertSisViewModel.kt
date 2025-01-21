@@ -11,20 +11,20 @@ import kotlinx.coroutines.launch
 
 // insert viewmodel : mengelola input data siswa
 
-class InsertViewModel(private val sis: SiswaRepository): ViewModel(){
-    var uiState by mutableStateOf(InsertUiState())
+class InsertSisViewModel(private val sis: SiswaRepository): ViewModel(){
+    var sisuiState by mutableStateOf(InsertSisUiState())
         private set
 
     // untuk memperbarui status UI berdasarkan input terbaru dari pengguna
-    fun updateInsertSisState(insertUiEvent: InsertUiEvent){
-        uiState = InsertUiState(insertUiEvent = insertUiEvent)
+    fun updateInsertSisState(insertSisUiEvent: InsertSisUiEvent){
+        sisuiState = InsertSisUiState(insertSisUiEvent = insertSisUiEvent)
     }
 
     // untuk menyimpan data siswa ke dalam repository secara asynchronous dengan penanganan kesalahan
     fun insertSis(){
         viewModelScope.launch {
             try {
-                sis.insertSiswa(uiState.insertUiEvent.toSis())
+                sis.insertSiswa(sisuiState.insertSisUiEvent.toSis())
             }catch (e:Exception){
                 e.printStackTrace()
             }
@@ -33,12 +33,12 @@ class InsertViewModel(private val sis: SiswaRepository): ViewModel(){
 }
 
 // mewakili keadaan (state) UI untuk halaman input data siswa
-data class InsertUiState(
-    val insertUiEvent: InsertUiEvent = InsertUiEvent()
+data class InsertSisUiState(
+    val insertSisUiEvent: InsertSisUiEvent = InsertSisUiEvent()
 )
 
 //  menyimpan informasi inputan pengguna terkait data siswa
-data class InsertUiEvent(
+data class InsertSisUiEvent(
     val id_siswa: String = "",
     val namaSiswa: String = "",
     val email: String = "",
@@ -46,7 +46,7 @@ data class InsertUiEvent(
 )
 
 // konversi dari event input pengguna (InsertUiEvent) menjadi entitas siswa (Siswa)
-fun InsertUiEvent.toSis(): Siswa = Siswa(
+fun InsertSisUiEvent.toSis(): Siswa = Siswa(
     id_siswa = id_siswa,
     namaSiswa = namaSiswa,
     email = email,
@@ -54,12 +54,12 @@ fun InsertUiEvent.toSis(): Siswa = Siswa(
 )
 
 //  konversi dari entitas siswa (Siswa) menjadi status UI (InsertUiState)
-fun Siswa.toUiStateSis(): InsertUiState = InsertUiState(
-    insertUiEvent = toInsertUiEvent()
+fun Siswa.toUiStateSis(): InsertSisUiState = InsertSisUiState(
+    insertSisUiEvent = toInsertUiEvent()
 )
 
 // konversi dari entitas siswa (Siswa) menjadi event input pengguna (InsertUiEvent)
-fun Siswa.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
+fun Siswa.toInsertUiEvent(): InsertSisUiEvent = InsertSisUiEvent(
     id_siswa = id_siswa,
     namaSiswa = namaSiswa,
     email = email,

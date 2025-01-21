@@ -12,29 +12,29 @@ import kotlinx.coroutines.launch
 
 // Detail viewmodel : untuk menangani pembaruan data, termasuk logika penyimpanan dan perubahan UI state.
 
-class UpdateViewModel(savedStateHandle: SavedStateHandle,
+class UpdateSisViewModel(savedStateHandle: SavedStateHandle,
                       private val siswaRepository: SiswaRepository): ViewModel()
 {
-    var updateUiState by mutableStateOf(InsertUiState())
+    var updateSisUiState by mutableStateOf(InsertSisUiState())
         private set
 
     private val _id_siswa: String = checkNotNull(savedStateHandle[DestinasiUpdate.id_siswa])
 
     init {
         viewModelScope.launch {
-            updateUiState = siswaRepository.getSiswaById(_id_siswa)
+            updateSisUiState = siswaRepository.getSiswaById(_id_siswa)
                 .toUiStateSis()
         }
     }
 
-    fun updateInsertMhsState(insertUiEvent: InsertUiEvent){
-        updateUiState = InsertUiState(insertUiEvent = insertUiEvent)
+    fun updateInsertSisState(insertUiEvent: InsertSisUiEvent){
+        updateSisUiState = InsertSisUiState(insertSisUiEvent = insertUiEvent)
     }
 
     fun updateMhs(){
         viewModelScope.launch {
             try {
-                siswaRepository.updateSiswa(_id_siswa, updateUiState.insertUiEvent.toSis())
+                siswaRepository.updateSiswa(_id_siswa, updateSisUiState.insertSisUiEvent.toSis())
             }catch (e: Exception){
                 e.printStackTrace()
             }

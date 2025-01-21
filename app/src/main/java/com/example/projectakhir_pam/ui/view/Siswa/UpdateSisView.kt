@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.UpdateViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.UpdateSisViewModel
 import kotlinx.coroutines.launch
 
 // update view : untuk menampiilkan update data
@@ -28,7 +28,7 @@ fun UpdateView( // untuk memperbarui data mahasiswa dengan navigasi kembali
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    updateViewModel: UpdateViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    updateViewModel: UpdateSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -42,8 +42,8 @@ fun UpdateView( // untuk memperbarui data mahasiswa dengan navigasi kembali
         modifier = modifier
     ) { innerPadding ->
         EntryBody(
-            insertUiState = updateViewModel.updateUiState,
-            onMhsValueChange = updateViewModel::updateInsertMhsState,
+            insertSisUiState = updateViewModel.updateSisUiState,
+            onSisValueChange = updateViewModel::updateInsertSisState,
             onSaveClick = {
                 coroutineScope.launch {
                     updateViewModel.updateMhs()

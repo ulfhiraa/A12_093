@@ -13,12 +13,12 @@ import kotlinx.coroutines.launch
 
 // Detail viewmodel : untuk mengelola pengambilan dan penghapusan data siswa berdasarkan id dan pembaruan UI State
 
-class DetailViewModel(savedStateHandle: SavedStateHandle,
+class DetailSisViewModel(savedStateHandle: SavedStateHandle,
                       private val siswaRepository: SiswaRepository) : ViewModel()
 {
     private val id_siswa: String = checkNotNull(savedStateHandle[DestinasiDetail.id_siswa])
 
-    var detailUiState: DetailUiState by mutableStateOf(DetailUiState())
+    var detailSisUiState: DetailSisUiState by mutableStateOf(DetailSisUiState())
         private set
 
     init {
@@ -27,15 +27,15 @@ class DetailViewModel(savedStateHandle: SavedStateHandle,
 
     fun getSiswaById() {
         viewModelScope.launch {
-            detailUiState = DetailUiState(isLoading = true)
+            detailSisUiState = DetailSisUiState(isLoading = true)
             try {
                 val result = siswaRepository.getSiswaById(id_siswa)
-                detailUiState = DetailUiState(
-                    detailUiEvent = result.toDetailUiEvent(),
+                detailSisUiState = DetailSisUiState(
+                    detailSisUiEvent = result.toDetailSisUiEvent(),
                     isLoading = false
                 )
             } catch (e: Exception) {
-                detailUiState = DetailUiState(
+                detailSisUiState = DetailSisUiState(
                     isLoading = false,
                     isError = true,
                     errorMessage = e.message ?: "Unknown"
@@ -46,13 +46,13 @@ class DetailViewModel(savedStateHandle: SavedStateHandle,
 
     fun deleteSis() {
         viewModelScope.launch {
-            detailUiState = DetailUiState(isLoading = true)
+            detailSisUiState = DetailSisUiState(isLoading = true)
             try {
                 siswaRepository.deleteSiswa(id_siswa)
 
-                detailUiState = DetailUiState(isLoading = false)
+                detailSisUiState = DetailSisUiState(isLoading = false)
             } catch (e: Exception) {
-                detailUiState = DetailUiState(
+                detailSisUiState = DetailSisUiState(
                     isLoading = false,
                     isError = true,
                     errorMessage = e.message ?: "Unknown Error"
@@ -62,21 +62,21 @@ class DetailViewModel(savedStateHandle: SavedStateHandle,
     }
 }
 
-data class DetailUiState(
-    val detailUiEvent: InsertUiEvent = InsertUiEvent(),
+data class DetailSisUiState(
+    val detailSisUiEvent: InsertSisUiEvent = InsertSisUiEvent(),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String = ""
 ){
     val isUiEventEmpty: Boolean
-        get() = detailUiEvent == InsertUiEvent()
+        get() = detailSisUiEvent == InsertSisUiEvent()
 
     val isUiEventNotEmpty: Boolean
-        get() = detailUiEvent != InsertUiEvent()
+        get() = detailSisUiEvent != InsertSisUiEvent()
 }
 
-fun Siswa.toDetailUiEvent(): InsertUiEvent {
-    return InsertUiEvent(
+fun Siswa.toDetailSisUiEvent(): InsertSisUiEvent {
+    return InsertSisUiEvent(
         id_siswa = id_siswa,
         namaSiswa = namaSiswa,
         email = email,

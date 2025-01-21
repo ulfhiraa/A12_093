@@ -41,8 +41,8 @@ import com.example.projectakhir_pam.model.Siswa
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeUiState
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisUiState
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
 
 /*
 Home view untuk menampilkan daftar siswa dengan fitur CRUD, dan status UI (loading,success,error)
@@ -60,7 +60,7 @@ fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
-    viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    viewModel: HomeSisViewModel = viewModel(factory = PenyediaViewModel.Factory),
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -88,7 +88,7 @@ fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
         },
     ) { innerPadding ->
         HomeStatus(
-            homeUiState = viewModel.sisUIState,
+            homeSisUiState = viewModel.sisUIState,
             retryAction = { viewModel.getSis() }, modifier = Modifier.padding(innerPadding),
             onDetailClick = onDetailClick,
             onDeleteClick = {
@@ -101,21 +101,21 @@ fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
 
 @Composable
 fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
-    homeUiState: HomeUiState,
+    homeSisUiState: HomeSisUiState,
     retryAction: () -> Unit, // untuk mencoba lagi jika pengambilan data gagal
     modifier: Modifier = Modifier,
     onDeleteClick: (Siswa) -> Unit = {},
     onDetailClick: (String) -> Unit
 ) {
     when (
-        homeUiState) {
+        homeSisUiState) {
         //Menampilkan gambar loading.
-        is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+        is HomeSisUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
         // Menampilkan daftar siswa jika data berhasil diambil.
-        is HomeUiState.Success ->
+        is HomeSisUiState.Success ->
             if (
-                homeUiState.siswa.isEmpty()){
+                homeSisUiState.siswa.isEmpty()){
                 return Box (modifier = modifier.
                 fillMaxSize(),
                     contentAlignment = Alignment.Center) {
@@ -123,7 +123,7 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
                 }
             }else {
                 SisLayout(
-                    siswa = homeUiState.siswa,
+                    siswa = homeSisUiState.siswa,
                     modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
                         onDetailClick(it.id_siswa)
@@ -135,7 +135,7 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
             }
 
         // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
-        is HomeUiState.Error -> OnError(
+        is HomeSisUiState.Error -> OnError(
             retryAction,
             modifier = modifier.fillMaxSize()
         )
@@ -145,8 +145,8 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
 @Composable
 fun OnLoading( modifier: Modifier = Modifier){
     Image(
-        modifier = modifier.size(50.dp),
-       painter = painterResource(R.drawable.load),
+        modifier = modifier.size(4.dp),
+        painter = painterResource(R.drawable.load),
         contentDescription = stringResource(R.string.loading)
     )
 }
@@ -213,7 +213,7 @@ fun SisCard( //  untuk menampilkan detail siswa dalam bentuk card
     Card (
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 14.dp)
     ) {
         Column (
             modifier = Modifier.padding(16.dp),

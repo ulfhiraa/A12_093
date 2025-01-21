@@ -25,9 +25,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertUiEvent
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertUiState
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisUiEvent
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisUiState
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisViewModel
 import kotlinx.coroutines.launch
 
 // insert view : menambahkan data siswa baru
@@ -43,7 +43,7 @@ object DestinasiEntry : DestinasiNavigasi {
 fun EntrySisScreen( //  untuk menambahkan data siswa dengan form input, navigasi kembali, dan tombol simpan
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: InsertSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -61,8 +61,8 @@ fun EntrySisScreen( //  untuk menambahkan data siswa dengan form input, navigasi
         }
     ){ innerPadding ->
         EntryBody(
-            insertUiState = viewModel.uiState,
-            onMhsValueChange = viewModel::updateInsertSisState,
+            insertSisUiState = viewModel.sisuiState,
+            onSisValueChange = viewModel::updateInsertSisState,
             onSaveClick = {
                 coroutineScope.
                 launch {
@@ -80,8 +80,8 @@ fun EntrySisScreen( //  untuk menambahkan data siswa dengan form input, navigasi
 
 @Composable
 fun EntryBody( // untuk mengatur tata letak dan logika formulir input data siswa serta tombol simpan
-    insertUiState: InsertUiState,
-    onMhsValueChange: (InsertUiEvent) -> Unit,
+    insertSisUiState: InsertSisUiState,
+    onSisValueChange: (InsertSisUiEvent) -> Unit,
     onSaveClick: () -> Unit,
     modifier:
     Modifier = Modifier
@@ -92,8 +92,8 @@ fun EntryBody( // untuk mengatur tata letak dan logika formulir input data siswa
             .padding(12.dp)
     ) {
         FormInput(
-            insertUiEvent = insertUiState.insertUiEvent,
-            onValueChange = onMhsValueChange,
+            insertSisUiEvent = insertSisUiState.insertSisUiEvent,
+            onValueChange = onSisValueChange,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -110,9 +110,9 @@ fun EntryBody( // untuk mengatur tata letak dan logika formulir input data siswa
 
 @Composable
 fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, email, dan nomor telepon dengan validasi
-    insertUiEvent: InsertUiEvent,
+    insertSisUiEvent: InsertSisUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange: (InsertUiEvent) -> Unit = {},
+    onValueChange: (InsertSisUiEvent) -> Unit = {},
     enabled: Boolean = true
 ){
     Column (
@@ -121,8 +121,8 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
     ){
         // TEXTFIELD ID Siswa
         OutlinedTextField(
-            value = insertUiEvent.id_siswa,
-            onValueChange = { onValueChange(insertUiEvent.copy(id_siswa = it)) },
+            value = insertSisUiEvent.id_siswa,
+            onValueChange = { onValueChange(insertSisUiEvent.copy(id_siswa = it)) },
 //            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // tipe keyboard angka
             label = { Text("ID Siswa") },
             modifier = Modifier.fillMaxWidth(),
@@ -132,8 +132,8 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
 
         // TEXTFIELD Nama Siswa
         OutlinedTextField(
-            value = insertUiEvent.namaSiswa,
-            onValueChange = { onValueChange(insertUiEvent.copy(namaSiswa = it)) },
+            value = insertSisUiEvent.namaSiswa,
+            onValueChange = { onValueChange(insertSisUiEvent.copy(namaSiswa = it)) },
             label = { Text("Nama Siswa") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
@@ -142,8 +142,8 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
 
         // TEXTFIELD Email
         OutlinedTextField(
-            value = insertUiEvent.email,
-            onValueChange = { onValueChange(insertUiEvent.copy(email = it)) },
+            value = insertSisUiEvent.email,
+            onValueChange = { onValueChange(insertSisUiEvent.copy(email = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), // tipe keyboard email
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
@@ -153,8 +153,8 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
 
         // TEXTFIELD Nomor Telepon
         OutlinedTextField(
-            value = insertUiEvent.noTelpSiswa,
-            onValueChange = { onValueChange(insertUiEvent.copy(noTelpSiswa = it)) },
+            value = insertSisUiEvent.noTelpSiswa,
+            onValueChange = { onValueChange(insertSisUiEvent.copy(noTelpSiswa = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // tipe keyboard angka
             label = { Text("Nomor Telepon") },
             modifier = Modifier.fillMaxWidth(),
