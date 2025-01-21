@@ -13,8 +13,8 @@ import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntry
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHome
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdate
 import com.example.projectakhir_pam.ui.view.Siswa.DetailView
-import com.example.projectakhir_pam.ui.view.Siswa.EntrySisScreen
 import com.example.projectakhir_pam.ui.view.Siswa.HomeView
+import com.example.projectakhir_pam.ui.view.Siswa.InsertSisView
 import com.example.projectakhir_pam.ui.view.Siswa.UpdateView
 
 // mengatur navigasi halaman
@@ -36,15 +36,18 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     navController.navigate(DestinasiEntry.route)
                 },
                 onDetailClick =
-                { id_siswa ->
-                    navController.navigate("${DestinasiDetail.route}/$id_siswa")
+                {
+                    navController.navigate("${DestinasiDetail.route}/$it")
+                },
+                onEditClick = {
+                    navController.navigate("${DestinasiUpdate.route}/$it")
                 }
             )
         }
 
         // TAMBAH SISWA
         composable(DestinasiEntry.route) {
-            EntrySisScreen(navigateBack = {
+            InsertSisView(navigateBack = {
                 navController.navigate(DestinasiHome.route) {
                     popUpTo(DestinasiHome.route) {
                         inclusive = true
@@ -66,12 +69,6 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
             id_siswa?.let { id_siswa ->
                 DetailView(
                     navigateBack = {
-                        navController.popBackStack()
-                    },
-                    onEditClick = {
-                        navController.navigate("${DestinasiUpdate.route}/$id_siswa")
-                    },
-                    onDeleteClick = {
                         navController.popBackStack()
                     }
                 )
