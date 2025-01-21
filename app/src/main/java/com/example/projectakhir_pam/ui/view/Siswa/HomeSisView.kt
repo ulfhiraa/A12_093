@@ -25,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,16 +50,14 @@ import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
 /*
 Home view untuk menampilkan daftar siswa dengan fitur CRUD, dan status UI (loading,success,error)
 */
-
-
 object DestinasiHome : DestinasiNavigasi {
-    override val route = "homeSiswa" // rute navigasi
+    override val route = "home" // rute navigasi
     override val titleRes = "Home Siswa" // judul yang akan ditampilkan di halaman
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
+fun HomeView( // tampilan utama yang menampilkan daftar siswa
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
@@ -94,7 +91,7 @@ fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Siswa"
                     )
-                    Text(text = "Tambah") // Menambahkan teks "Tambah"
+                    Text(text = "Tambah Data") // Menambahkan teks "Tambah"
                 }
             }
         }
@@ -174,7 +171,7 @@ fun OnError(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Image(
-          painter = painterResource(id = R.drawable.failed),
+            painter = painterResource(id = R.drawable.failed),
             contentDescription = "Error Image",
             modifier = Modifier
                 .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp

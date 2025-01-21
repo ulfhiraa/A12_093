@@ -52,7 +52,7 @@ object DestinasiDetail : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delete
+fun DetailView( // untuk menampilkan detail mahasiswa
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
     onEditClick: () -> Unit,
@@ -90,7 +90,7 @@ fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delet
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         BodyDetailSis(
-            detailUiState = viewModel.detailSisUiState,
+            detailsisUiState = viewModel.detailSisUiState,
             modifier = Modifier.padding(innerPadding),
             onDeleteClick = {
                 deleteConfirmationRequired = true
@@ -113,15 +113,14 @@ fun DetailView( // untuk menampilkan detail mahasiswa dengan opsi edit dan delet
     }
 }
 
-
 @Composable
 fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
     modifier: Modifier = Modifier,
-    detailUiState: DetailSisUiState,
+    detailsisUiState: DetailSisUiState,
     onDeleteClick: () -> Unit
 ) {
     when {
-        detailUiState.isLoading -> {
+        detailsisUiState.isLoading -> {
             Box(
                 modifier = modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -129,25 +128,25 @@ fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
                 CircularProgressIndicator()
             }
         }
-        detailUiState.isError -> {
+        detailsisUiState.isError -> {
             Box(
                 modifier = modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = detailUiState.errorMessage,
+                    text = detailsisUiState.errorMessage,
                     color = Color.Red
                 )
             }
         }
-        detailUiState.isUiEventNotEmpty -> {
+        detailsisUiState.isUiEventNotEmpty -> {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 ItemDetailSis(
-                    siswa = detailUiState.detailSisUiEvent.toSis(),
+                    siswa = detailsisUiState.detailSisUiEvent.toSis(),
                     modifier = modifier
                 )
 

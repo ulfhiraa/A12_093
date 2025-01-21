@@ -14,7 +14,7 @@ import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHome
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdate
 import com.example.projectakhir_pam.ui.view.Siswa.DetailView
 import com.example.projectakhir_pam.ui.view.Siswa.EntrySisScreen
-import com.example.projectakhir_pam.ui.view.Siswa.HomeScreen
+import com.example.projectakhir_pam.ui.view.Siswa.HomeView
 import com.example.projectakhir_pam.ui.view.Siswa.UpdateView
 
 // mengatur navigasi halaman
@@ -28,10 +28,15 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         modifier = Modifier,
     ) {
         // HOME SISWA
-        composable(DestinasiHome.route) {
-            HomeScreen(
-                navigateToItemEntry = { navController.navigate(DestinasiEntry.route) },
-                onDetailClick = { id_siswa ->
+        composable(DestinasiHome.route)
+        {
+            HomeView(
+                navigateToItemEntry =
+                {
+                    navController.navigate(DestinasiEntry.route)
+                },
+                onDetailClick =
+                { id_siswa ->
                     navController.navigate("${DestinasiDetail.route}/$id_siswa")
                 }
             )
@@ -57,8 +62,8 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 }
             )
         ) {
-            val nim = it.arguments?.getString(DestinasiDetail.id_siswa)
-            nim?.let { id_siswa ->
+            val id_siswa = it.arguments?.getString(DestinasiDetail.id_siswa)
+            id_siswa?.let { id_siswa ->
                 DetailView(
                     navigateBack = {
                         navController.popBackStack()
