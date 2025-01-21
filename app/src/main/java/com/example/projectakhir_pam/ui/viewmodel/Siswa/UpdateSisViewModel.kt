@@ -7,7 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projectakhir_pam.repository.SiswaRepository
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdate
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdateSis
 import kotlinx.coroutines.launch
 
 // Detail viewmodel : untuk menangani pembaruan data, termasuk logika penyimpanan dan perubahan UI state.
@@ -18,7 +18,7 @@ class UpdateSisViewModel(savedStateHandle: SavedStateHandle,
     var updateSisUiState by mutableStateOf(InsertSisUiState())
         private set
 
-    private val _id_siswa: String = checkNotNull(savedStateHandle[DestinasiUpdate.id_siswa])
+    private val _id_siswa: String = checkNotNull(savedStateHandle[DestinasiUpdateSis.id_siswa])
 
     init {
         viewModelScope.launch {
