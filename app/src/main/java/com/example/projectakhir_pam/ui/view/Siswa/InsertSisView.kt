@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.FormErrorState
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisUiEvent
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisUiState
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisViewModel
@@ -40,7 +42,7 @@ object DestinasiEntry : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EntrySisScreen( //  untuk menambahkan data siswa dengan form input, navigasi kembali, dan tombol simpan
+fun InsertSisView( //  untuk menambahkan data siswa dengan form input, navigasi kembali, dan tombol simpan
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InsertSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -66,8 +68,10 @@ fun EntrySisScreen( //  untuk menambahkan data siswa dengan form input, navigasi
             onSaveClick = {
                 coroutineScope.
                 launch {
-                    viewModel.insertSis()
-                    navigateBack()
+                    if (viewModel.validateFields()) {
+                        viewModel.insertSis()
+                        navigateBack()
+                    }
                 }
             },
             modifier = Modifier
@@ -94,6 +98,7 @@ fun EntryBody( // untuk mengatur tata letak dan logika formulir input data siswa
         FormInput(
             insertSisUiEvent = insertSisUiState.insertSisUiEvent,
             onValueChange = onSisValueChange,
+            errorState = insertSisUiState.isEntryValid,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -113,6 +118,7 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
     insertSisUiEvent: InsertSisUiEvent,
     modifier: Modifier = Modifier,
     onValueChange: (InsertSisUiEvent) -> Unit = {},
+    errorState: FormErrorState = FormErrorState(),
     enabled: Boolean = true
 ){
     Column (
@@ -121,45 +127,68 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
     ){
         // TEXTFIELD ID Siswa
         OutlinedTextField(
-            value = insertSisUiEvent.id_siswa,
-            onValueChange = { onValueChange(insertSisUiEvent.copy(id_siswa = it)) },
-//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // tipe keyboard angka
-            label = { Text("ID Siswa") },
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
+            value = insertSisUiEvent.id_siswa,
+            onValueChange = {
+                onValueChange(insertSisUiEvent.copy(id_siswa = it))
+            },
+            label = { Text("ID Siswa")},
+            isError = errorState.id_siswa != null,
+            placeholder = { Text("Masukkan ID Siswa")},
+        )
+        Text(
+            text = errorState.id_siswa ?: "",
+            color = Color.Red
         )
 
         // TEXTFIELD Nama Siswa
         OutlinedTextField(
-            value = insertSisUiEvent.namaSiswa,
-            onValueChange = { onValueChange(insertSisUiEvent.copy(namaSiswa = it)) },
-            label = { Text("Nama Siswa") },
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
+            value = insertSisUiEvent.namaSiswa,
+            onValueChange = {
+                onValueChange(insertSisUiEvent.copy(namaSiswa = it))
+            },
+            label = { Text("Nama Siswa")},
+            isError = errorState.namaSiswa != null,
+            placeholder = { Text("Masukkan Nama Siswa")},
+        )
+        Text(
+            text = errorState.namaSiswa ?: "",
+            color = Color.Red
         )
 
         // TEXTFIELD Email
         OutlinedTextField(
-            value = insertSisUiEvent.email,
-            onValueChange = { onValueChange(insertSisUiEvent.copy(email = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), // tipe keyboard email
-            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
+            value = insertSisUiEvent.email,
+            onValueChange = {
+                onValueChange(insertSisUiEvent.copy(email = it))
+            },
+            label = { Text("Email")},
+            isError = errorState.email != null,
+            placeholder = { Text("Masukkan Email")},
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), // tipe keyboard email
+        )
+        Text(
+            text = errorState.email ?: "",
+            color = Color.Red
         )
 
         // TEXTFIELD Nomor Telepon
         OutlinedTextField(
-            value = insertSisUiEvent.noTelpSiswa,
-            onValueChange = { onValueChange(insertSisUiEvent.copy(noTelpSiswa = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // tipe keyboard angka
-            label = { Text("Nomor Telepon") },
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
+            value = insertSisUiEvent.noTelpSiswa,
+            onValueChange = {
+                onValueChange(insertSisUiEvent.copy(noTelpSiswa = it))
+            },
+            label = { Text("Nomor Telepon")},
+            isError = errorState.noTelpSiswa != null,
+            placeholder = { Text("Masukkan Nomor Telepon")},
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), // tipe keyboard email
+        )
+        Text(
+            text = errorState.noTelpSiswa ?: "",
+            color = Color.Red
         )
 
         if (enabled) {

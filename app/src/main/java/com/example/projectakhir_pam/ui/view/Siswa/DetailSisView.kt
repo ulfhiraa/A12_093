@@ -5,26 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,8 +44,6 @@ object DestinasiDetail : DestinasiNavigasi {
 fun DetailView( // untuk menampilkan detail mahasiswa
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit = { },
     viewModel: DetailSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -73,43 +60,13 @@ fun DetailView( // untuk menampilkan detail mahasiswa
                     viewModel.getSiswaById()
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onEditClick,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(18.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Siswa"
-                )
-            }
         }
     ) { innerPadding ->
-        var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
         BodyDetailSis(
             detailsisUiState = viewModel.detailSisUiState,
-            modifier = Modifier.padding(innerPadding),
-            onDeleteClick = {
-                deleteConfirmationRequired = true
-            }
+            modifier = Modifier.padding(innerPadding)
         )
-
-        if (deleteConfirmationRequired) {
-            DeleteConfirmationDialog(
-                onDeleteConfirm = {
-                    viewModel.deleteSis()
-                    onDeleteClick()
-                    deleteConfirmationRequired = false
-                },
-                onDeleteCancel = {
-                    deleteConfirmationRequired = false
-                },
-                modifier = Modifier.padding(8.dp)
-            )
-        }
     }
 }
 
@@ -117,7 +74,6 @@ fun DetailView( // untuk menampilkan detail mahasiswa
 fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
     modifier: Modifier = Modifier,
     detailsisUiState: DetailSisUiState,
-    onDeleteClick: () -> Unit
 ) {
     when {
         detailsisUiState.isLoading -> {
@@ -149,14 +105,6 @@ fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
                     siswa = detailsisUiState.detailSisUiEvent.toSis(),
                     modifier = modifier
                 )
-
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Delete")
-                }
             }
         }
     }
@@ -212,26 +160,4 @@ fun ComponentDetailSis( // untuk menampilkan judul dan isi data siswa
             fontWeight = FontWeight.Bold
         )
     }
-}
-
-@Composable
-private fun DeleteConfirmationDialog( // untuk dialog konfirmasi penghapusan data siswa
-    onDeleteConfirm: () -> Unit,
-    onDeleteCancel: () -> Unit,
-    modifier: Modifier = Modifier
-){
-    AlertDialog(onDismissRequest = { },
-        title = { Text("Delete Data") },
-        text = { Text("Apakah anda yakin ingin menghapus data?") },
-        dismissButton = {
-            TextButton(onClick = { onDeleteCancel() }) {
-                Text(text = "Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onDeleteConfirm() }) {
-                Text(text = "Yes")
-            }
-        }
-    )
 }

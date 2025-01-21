@@ -6,14 +6,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -23,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -61,11 +65,13 @@ fun HomeView( // tampilan utama yang menampilkan daftar siswa
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
+    onEditClick: (String) -> Unit = {},
     viewModel: HomeSisViewModel = viewModel(factory = PenyediaViewModel.Factory),
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomeTopAppBar(
                 // Menampilkan judul "Home Siswa" dan tombol refresh untuk memuat ulang data siswa.
@@ -98,12 +104,16 @@ fun HomeView( // tampilan utama yang menampilkan daftar siswa
     ) { innerPadding ->
         HomeStatus(
             homeSisUiState = viewModel.sisUIState,
-            retryAction = { viewModel.getSis() }, modifier = Modifier.padding(innerPadding),
+            retryAction = { viewModel.getSis() },
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             onDetailClick = onDetailClick,
             onDeleteClick = {
                 viewModel.deleteSis(it.id_siswa ) // Mengambil data siswa dari repository
                 viewModel.getSis() // Menghapus siswa berdasarkan ID yang dipilih
-            }
+            },
+            onEditClick = onEditClick
         )
     }
 }
@@ -114,7 +124,8 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
     retryAction: () -> Unit, // untuk mencoba lagi jika pengambilan data gagal
     modifier: Modifier = Modifier,
     onDeleteClick: (Siswa) -> Unit = {},
-    onDetailClick: (String) -> Unit
+    onDetailClick: (String) -> Unit,
+    onEditClick: (String) -> Unit
 ) {
     when (
         homeSisUiState) {
@@ -139,7 +150,8 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
                     },
                     onDeleteClick = {
                         onDeleteClick(it)
-                    }
+                    },
+                    onEditClick = { siswa -> onEditClick(siswa.id_siswa) }
                 )
             }
 
@@ -188,99 +200,46 @@ fun OnError(
 }
 
 @Composable
-fun SisLayout( // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
+fun SisLayout(
     siswa: List<Siswa>,
     modifier: Modifier = Modifier,
     onDetailClick: (Siswa) -> Unit,
-    onDeleteClick: (Siswa) -> Unit = {}
+    onDeleteClick: (Siswa) -> Unit = {},
+    onEditClick: (Siswa) -> Unit = {}
 ) {
     var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
     var siswaToDelete by remember { mutableStateOf<Siswa?>(null) }  // Menyimpan siswa yang akan dihapus
 
     // Card utama yang membungkus seluruh tabel
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxSize(),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            // Header tabel dengan nama kolom
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = "ID Siswa", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-                Text(text = "Nama Siswa", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-                Text(text = "Email", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-                Text(text = "No Telepon", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-            }
+            SisHeader() // Header tabel dengan nama kolom
 
-            // Divider untuk garis pemisah di bawah header
-            Divider(color = Color.Gray, thickness = 1.dp)
+            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah
 
             // Data siswa
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(siswa) { siswaItem ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = siswaItem.id_siswa,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = siswaItem.namaSiswa,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = siswaItem.email,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = siswaItem.noTelpSiswa,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    // Tombol Detail dan Hapus
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(200.dp),
-                    ) {
-                        Button(
-                            onClick = {
-                                siswaToDelete = siswaItem // Menyimpan siswa yang akan dihapus
-                                showDialog = true // Menampilkan dialog
-                            },
-                            modifier = Modifier.weight(2f)
-                        ) {
-                            Text(text = "Hapus")
+                    SisCard(
+                        siswaItem = siswaItem,
+                        onDetailClick = onDetailClick,
+                        onEditClick = onEditClick,
+                        onDeleteClick = {
+                            siswaToDelete = siswaItem
+                            showDialog = true
                         }
-
-                        Button(
-                            onClick = { onDetailClick(siswaItem) },
-                            modifier = Modifier.weight(2f)
-                        ) {
-                            Text(text = "Detail")
-                        }
-                    }
+                    )
                 }
             }
         }
@@ -288,27 +247,151 @@ fun SisLayout( // Menampilkan pesan error dengan tombol retry jika pengambilan d
 
     // Dialog konfirmasi untuk menghapus siswa
     if (showDialog && siswaToDelete != null) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("Konfirmasi Hapus") },
-            text = { Text("Apakah Anda yakin ingin menghapus data siswa ${siswaToDelete?.namaSiswa}?") },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        onDeleteClick(siswaToDelete!!) // Menghapus siswa
-                        showDialog = false // Menutup dialog setelah menghapus
-                    }
-                ) {
-                    Text("Hapus")
-                }
+        DeleteConfirmationDialog(
+            siswa = siswaToDelete,
+            onConfirm = {
+                onDeleteClick(siswaToDelete!!)
+                showDialog = false
             },
-            dismissButton = {
-                Button(
-                    onClick = { showDialog = false } // Menutup dialog tanpa menghapus
-                ) {
-                    Text("Batal")
-                }
-            }
+            onDismiss = { showDialog = false }
         )
     }
+}
+
+@Composable
+fun SisHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "ID Siswa",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(2f)
+        )
+        Text(
+            text = "Nama Siswa",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(3f)
+        )
+        Text(
+            text = "Email",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(2f)
+        )
+        Text(
+            text = "No Telepon",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(2f)
+        )
+    }
+}
+
+@Composable
+fun SisCard(
+    siswaItem: Siswa,
+    onDetailClick: (Siswa) -> Unit,
+    onEditClick: (Siswa) -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(14.dp)
+    ) {
+        // Data siswa (Preview)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = siswaItem.id_siswa,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(2f)
+            )
+            Text(
+                text = siswaItem.namaSiswa.take(10) + "...", // Hanya tampilkan 10 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(3f)
+            )
+            Text(
+                text = siswaItem.email.take(6) + "...", // Hanya tampilkan 10 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(2f)
+            )
+            Text(
+                text = siswaItem.noTelpSiswa.take(5) + "...", // Hanya tampilkan 7 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(2f)
+            )
+        }
+
+        // Tombol Aksi; Detail, Edit, Hapus
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Button Detail
+            OutlinedButton(
+                onClick = { onDetailClick(siswaItem) },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Text(text = "Detail")
+            }
+
+            // Button Edit
+            OutlinedButton(
+                onClick = { onEditClick(siswaItem) },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Edit")
+            }
+
+            // Button Hapus
+            OutlinedButton(
+                onClick = onDeleteClick,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Text(text = "Hapus")
+            }
+        }
+    }
+}
+
+@Composable
+fun DeleteConfirmationDialog(
+    siswa: Siswa?,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Konfirmasi Hapus") },
+        text = { Text("Apakah Anda yakin ingin menghapus data siswa ${siswa?.namaSiswa}?") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Hapus")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Batal")
+            }
+        }
+    )
 }
