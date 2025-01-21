@@ -8,8 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiDetailInst
+import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiEntryInst
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiHomeInst
+import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiUpdateInst
+import com.example.projectakhir_pam.ui.view.Instruktur.DetailInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.HomeInstView
+import com.example.projectakhir_pam.ui.view.Instruktur.InsertInstView
+import com.example.projectakhir_pam.ui.view.Instruktur.UpdateInstView
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntrySis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHomeSis
@@ -97,76 +103,76 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 )
             }
         }
-    }
 
-    // == DATA INSTRUKTUR ==
+        // == DATA INSTRUKTUR ==
 
-    // HOME INSTRUKTUR
-    composable(DestinasiHomeInst.route)
-    {
-        HomeInstView(
-            navigateToItemEntry =
-            {
-                navController.navigate(DestinasiEntryInst.route)
-            },
-            onDetailInstClick =
-            {
-                navController.navigate("${DestinasiDetailInst.route}/$it")
-            },
-            onEditInstClick = {
-                navController.navigate("${DestinasiUpdateInst.route}/$it")
+        // HOME INSTRUKTUR
+        composable(DestinasiHomeInst.route)
+        {
+            HomeInstView(
+                navigateToItemEntry =
+                {
+                    navController.navigate(DestinasiEntryInst.route)
+                },
+                onDetailInstClick =
+                {
+                    navController.navigate("${DestinasiDetailInst.route}/$it")
+                },
+                onEditInstClick = {
+                    navController.navigate("${DestinasiUpdateInst.route}/$it")
+                }
+            )
+        }
+
+        // TAMBAH INSTRUKTUR
+        composable(DestinasiEntryInst.route) {
+            InsertInstView(navigateBack = {
+                navController.navigate(DestinasiHomeInst.route) {
+                    popUpTo(DestinasiHomeInst.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        // DETAIL INSTRUKTUR
+        composable(
+            DestinasiDetailInst.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailInst.id_instruktur) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_instruktur = it.arguments?.getString(DestinasiDetailInst.id_instruktur)
+            id_instruktur?.let { id_instruktur ->
+                DetailInstView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
-        )
-    }
+        }
 
-//    // TAMBAH INSTRUKTUR
-//    composable(DestinasiEntryInst.route) {
-//        InsertInstView(navigateBack = {
-//            navController.navigate(DestinasiHomeInst.route) {
-//                popUpTo(DestinasiHomeInst.route) {
-//                    inclusive = true
-//                }
-//            }
-//        })
-//    }
-//
-//    // DETAIL INSTRUKTUR
-//    composable(
-//        DestinasiDetailInst.routeWithArgs,
-//        arguments = listOf(
-//            navArgument(DestinasiDetailInst.id_instruktur) {
-//                type = NavType.StringType
-//            }
-//        )
-//    ) {
-//        val id_instruktur = it.arguments?.getString(DestinasiDetailInst.id_instruktur)
-//        id_instruktur?.let { id_instruktur ->
-//            DetailView(
-//                navigateBack = {
-//                    navController.popBackStack()
-//                }
-//            )
-//        }
-//    }
-//
-//    // UPDATE INSTRUKTUR
-//    composable(
-//        DestinasiUpdateSis.routeWithArgs,
-//        arguments = listOf(
-//            navArgument(DestinasiUpdateSis.id_siswa) {
-//                type = NavType.StringType
-//            }
-//        )
-//    ) {
-//        val id_siswa = it.arguments?.getString(DestinasiUpdateSis.id_siswa)
-//        id_siswa?.let { id_siswa ->
-//            UpdateView(
-//                navigateBack = {
-//                    navController.popBackStack()
-//                },
-//                onNavigateUp =  {
-//                    navController.navigate(DestinasiHomeSis.route) }
-//            )
-//        }
-//    }
+        // UPDATE INSTRUKTUR
+        composable(
+            DestinasiUpdateInst.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdateInst.id_instruktur) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_instruktur = it.arguments?.getString(DestinasiUpdateInst.id_instruktur)
+            id_instruktur?.let { id_instruktur ->
+                UpdateInstView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    onNavigateUp =  {
+                        navController.navigate(DestinasiHomeInst.route) }
+                )
+            }
+        }
+    }
 }
