@@ -1,7 +1,10 @@
 package com.example.projectakhir_pam.dependenciesinjection
 
+import com.example.projectakhir_pam.repository.InstrukturRepository
+import com.example.projectakhir_pam.repository.NetworkInstrukturRepository
 import com.example.projectakhir_pam.repository.NetworkSiswaRepository
 import com.example.projectakhir_pam.repository.SiswaRepository
+import com.example.projectakhir_pam.service.InstrukturService
 import com.example.projectakhir_pam.service.SiswaService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -9,12 +12,13 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 // untuk mendeklarasikan siswaRepository
-interface SisContainer{
+interface CourseContainer{
     val siswaRepository: SiswaRepository
+    val instrukturRepository: InstrukturRepository
 }
 
 // untuk menyediakan
-class SiswaContainer : SisContainer{
+class BimbelContainer : CourseContainer{
     private val baseUrl = "http://10.0.2.2:3000/api/siswa/" // untuk mengakses API
 
     private val json = Json { ignoreUnknownKeys = true } //  mengatur format data JSON.
@@ -33,7 +37,15 @@ class SiswaContainer : SisContainer{
         retrofit.create(SiswaService::class.java)
     }
 
+    private val instrukturService: InstrukturService by lazy {
+        retrofit.create(InstrukturService::class.java)
+    }
+
     override val siswaRepository: SiswaRepository by lazy {
         NetworkSiswaRepository(siswaService)
+    }
+
+    override val instrukturRepository: InstrukturRepository by lazy {
+        NetworkInstrukturRepository(instrukturService)
     }
 }
