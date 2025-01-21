@@ -6,17 +6,17 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.projectakhir_pam.BimbelApplications
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertViewModel
-import com.example.projectakhir_pam.ui.viewmodel.Siswa.UpdateViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailSisViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Siswa.UpdateSisViewModel
 
 // inisialisasi view model operasi CRUD
 object PenyediaViewModel{
     val Factory = viewModelFactory {
         // HOME
         initializer {
-            HomeViewModel(
+            HomeSisViewModel(
                 BimbelApplications()
                     .sisContainer
                     .siswaRepository
@@ -25,7 +25,7 @@ object PenyediaViewModel{
 
         // INSERT
         initializer {
-            InsertViewModel(
+            InsertSisViewModel(
                 BimbelApplications()
                     .sisContainer
                     .siswaRepository
@@ -34,7 +34,7 @@ object PenyediaViewModel{
 
         // DETAIL
         initializer {
-            DetailViewModel(
+            DetailSisViewModel(
                 createSavedStateHandle(),
                 BimbelApplications()
                     .sisContainer
@@ -44,7 +44,7 @@ object PenyediaViewModel{
 
         // UPDATE
         initializer {
-            UpdateViewModel(
+            UpdateSisViewModel(
                 createSavedStateHandle(),
                 BimbelApplications()
                     .sisContainer
