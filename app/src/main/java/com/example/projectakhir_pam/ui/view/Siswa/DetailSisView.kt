@@ -41,7 +41,7 @@ object DestinasiDetailSis : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailView( // untuk menampilkan detail mahasiswa
+fun DetailSisView( // untuk menampilkan detail mahasiswa
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
     viewModel: DetailSisViewModel = viewModel(factory = PenyediaViewModel.Factory)

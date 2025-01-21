@@ -61,7 +61,7 @@ object DestinasiHomeSis : DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView( // tampilan utama yang menampilkan daftar siswa
+fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},

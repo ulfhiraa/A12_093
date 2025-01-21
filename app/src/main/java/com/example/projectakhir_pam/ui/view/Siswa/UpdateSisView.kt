@@ -24,7 +24,7 @@ object DestinasiUpdateSis: DestinasiNavigasi {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateView( // untuk memperbarui data mahasiswa dengan navigasi kembali
+fun UpdateSisView( // untuk memperbarui data mahasiswa dengan navigasi kembali
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
