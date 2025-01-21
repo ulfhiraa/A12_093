@@ -54,8 +54,8 @@ import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
 /*
 Home view untuk menampilkan daftar siswa dengan fitur CRUD, dan status UI (loading,success,error)
 */
-object DestinasiHome : DestinasiNavigasi {
-    override val route = "home" // rute navigasi
+object DestinasiHomeSis : DestinasiNavigasi {
+    override val route = "homeSiswa" // rute navigasi
     override val titleRes = "Home Siswa" // judul yang akan ditampilkan di halaman
 }
 
@@ -75,7 +75,7 @@ fun HomeView( // tampilan utama yang menampilkan daftar siswa
         topBar = {
             CustomeTopAppBar(
                 // Menampilkan judul "Home Siswa" dan tombol refresh untuk memuat ulang data siswa.
-                title = DestinasiHome.titleRes,
+                title = DestinasiHomeSis.titleRes,
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {

@@ -35,8 +35,8 @@ import kotlinx.coroutines.launch
 // insert view : menambahkan data siswa baru
 
 // untuk mendefinisikan rute navigasi ke layar 'Tambah Siswa'
-object DestinasiEntry : DestinasiNavigasi {
-    override val route = "item_entry"
+object DestinasiEntrySis : DestinasiNavigasi {
+    override val route = "tambahSiswa"
     override val titleRes = "Tambah Siswa"
 }
 
@@ -55,7 +55,7 @@ fun InsertSisView( //  untuk menambahkan data siswa dengan form input, navigasi 
         nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomeTopAppBar(
-                title = DestinasiEntry.titleRes,
+                title = DestinasiEntrySis.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack

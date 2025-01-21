@@ -32,8 +32,8 @@ import com.example.projectakhir_pam.ui.viewmodel.Siswa.toSis
 
 // detail view : agar detail dapat ditampilkan dan data dapat diedit, dan dihapus
 
-object DestinasiDetail : DestinasiNavigasi {
-    override val route = "detail"
+object DestinasiDetailSis : DestinasiNavigasi {
+    override val route = "detailSiswa"
     override val titleRes = "Detail Siswa"
     const val id_siswa = "id_siswa"
     val routeWithArgs = "$route/{$id_siswa}"

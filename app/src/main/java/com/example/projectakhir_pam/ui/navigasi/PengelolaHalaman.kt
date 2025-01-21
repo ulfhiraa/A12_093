@@ -8,10 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetail
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntry
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHome
-import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdate
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntrySis
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHomeSis
+import com.example.projectakhir_pam.ui.view.Siswa.DestinasiUpdateSis
 import com.example.projectakhir_pam.ui.view.Siswa.DetailView
 import com.example.projectakhir_pam.ui.view.Siswa.HomeView
 import com.example.projectakhir_pam.ui.view.Siswa.InsertSisView
@@ -24,32 +24,32 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
     NavHost(
         // untuk memulai navigasi dari HomeScreen dan menyediakan rute ke EntryMhsScreen
         navController = navController,
-        startDestination = DestinasiHome.route,
+        startDestination = DestinasiHomeSis.route,
         modifier = Modifier,
     ) {
         // HOME SISWA
-        composable(DestinasiHome.route)
+        composable(DestinasiHomeSis.route)
         {
             HomeView(
                 navigateToItemEntry =
                 {
-                    navController.navigate(DestinasiEntry.route)
+                    navController.navigate(DestinasiEntrySis.route)
                 },
                 onDetailClick =
                 {
-                    navController.navigate("${DestinasiDetail.route}/$it")
+                    navController.navigate("${DestinasiDetailSis.route}/$it")
                 },
                 onEditClick = {
-                    navController.navigate("${DestinasiUpdate.route}/$it")
+                    navController.navigate("${DestinasiUpdateSis.route}/$it")
                 }
             )
         }
 
         // TAMBAH SISWA
-        composable(DestinasiEntry.route) {
+        composable(DestinasiEntrySis.route) {
             InsertSisView(navigateBack = {
-                navController.navigate(DestinasiHome.route) {
-                    popUpTo(DestinasiHome.route) {
+                navController.navigate(DestinasiHomeSis.route) {
+                    popUpTo(DestinasiHomeSis.route) {
                         inclusive = true
                     }
                 }
@@ -58,14 +58,14 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
 
         // DETAIL SISWA
         composable(
-            DestinasiDetail.routeWithArgs,
+            DestinasiDetailSis.routeWithArgs,
             arguments = listOf(
-                navArgument(DestinasiDetail.id_siswa) {
+                navArgument(DestinasiDetailSis.id_siswa) {
                     type = NavType.StringType
                 }
             )
         ) {
-            val id_siswa = it.arguments?.getString(DestinasiDetail.id_siswa)
+            val id_siswa = it.arguments?.getString(DestinasiDetailSis.id_siswa)
             id_siswa?.let { id_siswa ->
                 DetailView(
                     navigateBack = {
@@ -77,21 +77,21 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
 
         // UPDATE SISWA
         composable(
-            DestinasiUpdate.routeWithArgs,
+            DestinasiUpdateSis.routeWithArgs,
             arguments = listOf(
-                navArgument(DestinasiUpdate.id_siswa) {
+                navArgument(DestinasiUpdateSis.id_siswa) {
                     type = NavType.StringType
                 }
             )
         ) {
-            val id_siswa = it.arguments?.getString(DestinasiUpdate.id_siswa)
+            val id_siswa = it.arguments?.getString(DestinasiUpdateSis.id_siswa)
             id_siswa?.let { id_siswa ->
                 UpdateView(
                     navigateBack = {
                         navController.popBackStack()
                     },
                     onNavigateUp =  {
-                        navController.navigate(DestinasiHome.route) }
+                        navController.navigate(DestinasiHomeSis.route) }
                 )
             }
         }

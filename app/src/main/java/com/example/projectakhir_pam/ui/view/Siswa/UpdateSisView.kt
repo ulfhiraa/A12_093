@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 // update view : untuk menampiilkan update data
 
-object DestinasiUpdate: DestinasiNavigasi {
-    override val route = "update"
+object DestinasiUpdateSis: DestinasiNavigasi {
+    override val route = "updateSiswa"
     override val titleRes = "Update Siswa" // judul halaman
     const val id_siswa = "id_siswa"
     val routeWithArgs = "$route/{$id_siswa}"
@@ -54,3 +54,5 @@ fun UpdateView( // untuk memperbarui data mahasiswa dengan navigasi kembali
         )
     }
 }
+
+
