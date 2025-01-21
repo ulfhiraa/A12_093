@@ -52,7 +52,7 @@ fun DetailView( // untuk menampilkan detail mahasiswa
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomeTopAppBar(
-                title = DestinasiDetail.titleRes,
+                title = DestinasiDetailSis.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack,
