@@ -1,13 +1,11 @@
 package com.example.projectakhir_pam.ui.view.Siswa
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,21 +14,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -80,12 +84,20 @@ fun HomeScreen( // tampilan utama yang menampilkan daftar siswa
             FloatingActionButton(
                 onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.
-                padding(18.dp)
+                modifier = Modifier.padding(12.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Siswa")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Siswa"
+                    )
+                    Text(text = "Tambah") // Menambahkan teks "Tambah"
+                }
             }
-        },
+        }
     ) { innerPadding ->
         HomeStatus(
             homeSisUiState = viewModel.sisUIState,
@@ -185,70 +197,121 @@ fun SisLayout( // Menampilkan pesan error dengan tombol retry jika pengambilan d
     onDetailClick: (Siswa) -> Unit,
     onDeleteClick: (Siswa) -> Unit = {}
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
+    var siswaToDelete by remember { mutableStateOf<Siswa?>(null) }  // Menyimpan siswa yang akan dihapus
+
+    // Card utama yang membungkus seluruh tabel
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        items(siswa) { siswa ->
-            SisCard(
-                siswa = siswa,
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Header tabel dengan nama kolom
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onDetailClick(siswa) }, //navigasi ke detail siswa saat data diklik
-                onDeleteClick = {
-                    onDeleteClick(siswa)
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun SisCard( //  untuk menampilkan detail siswa dalam bentuk card
-    siswa: Siswa,
-    modifier: Modifier = Modifier,
-    onDeleteClick: (Siswa) -> Unit = {}
-){
-    Card (
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 14.dp)
-    ) {
-        Column (
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ){
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = siswa.namaSiswa,
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = { onDeleteClick(siswa)}) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                    )
-                }
-                Text(
-                    text = siswa.id_siswa,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "ID Siswa", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                Text(text = "Nama Siswa", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                Text(text = "Email", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                Text(text = "No Telepon", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
             }
 
-            Text(
-                text = siswa.email,
-                style = MaterialTheme.typography.titleMedium
-            )
+            // Divider untuk garis pemisah di bawah header
+            Divider(color = Color.Gray, thickness = 1.dp)
 
-            Text(
-                text = siswa.noTelpSiswa,
-                style = MaterialTheme.typography.titleMedium
-            )
+            // Data siswa
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(siswa) { siswaItem ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = siswaItem.id_siswa,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = siswaItem.namaSiswa,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = siswaItem.email,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = siswaItem.noTelpSiswa,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Tombol Detail dan Hapus
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(200.dp),
+                    ) {
+                        Button(
+                            onClick = {
+                                siswaToDelete = siswaItem // Menyimpan siswa yang akan dihapus
+                                showDialog = true // Menampilkan dialog
+                            },
+                            modifier = Modifier.weight(2f)
+                        ) {
+                            Text(text = "Hapus")
+                        }
+
+                        Button(
+                            onClick = { onDetailClick(siswaItem) },
+                            modifier = Modifier.weight(2f)
+                        ) {
+                            Text(text = "Detail")
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    // Dialog konfirmasi untuk menghapus siswa
+    if (showDialog && siswaToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Konfirmasi Hapus") },
+            text = { Text("Apakah Anda yakin ingin menghapus data siswa ${siswaToDelete?.namaSiswa}?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDeleteClick(siswaToDelete!!) // Menghapus siswa
+                        showDialog = false // Menutup dialog setelah menghapus
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showDialog = false } // Menutup dialog tanpa menghapus
+                ) {
+                    Text("Batal")
+                }
+            }
+        )
     }
 }
