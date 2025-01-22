@@ -33,6 +33,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.projectakhir_pam.R
+import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
+
+// main home
+object DestinasiHome : DestinasiNavigasi {
+    override val route = "DestinasiHome"
+    override val titleRes = "Halaman Utama"
+}
 
 @Composable
 fun SectionHeader() {

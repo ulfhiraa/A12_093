@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.projectakhir_pam.ui.view.DestinasiHome
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiDetailInst
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiEntryInst
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiHomeInst
@@ -16,6 +17,8 @@ import com.example.projectakhir_pam.ui.view.Instruktur.DetailInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.HomeInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.InsertInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.UpdateInstView
+import com.example.projectakhir_pam.ui.view.PilihanHomeView
+import com.example.projectakhir_pam.ui.view.SectionHeader
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiEntrySis
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiHomeSis
@@ -32,9 +35,32 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
     NavHost(
         // untuk memulai navigasi dari HomeScreen dan menyediakan rute ke EntryMhsScreen
         navController = navController,
-        startDestination = DestinasiHomeSis.route,
+//        startDestination = DestinasiHomeSis.route,
+//        startDestination = DestinasiHomeInst.route,
+        startDestination = DestinasiHome.route,
         modifier = Modifier,
     ) {
+        // MAIN HOME
+        composable(
+            route = DestinasiHome.route
+        ){
+            PilihanHomeView(
+                onKursusClick = {
+                    navController.navigate(DestinasiHomeKursus.route)
+                },
+                onSiswaClick = {
+                    navController.navigate(DestinasiHomeSis.route)
+                },
+                onInstrukturClick = {
+                    navController.navigate(DestinasiHomeInst.route)
+                },
+                onPendaftaranClick = {
+                    navController.navigate(DestinasiHomePend.route)
+                }
+            )
+            SectionHeader()
+        }
+
         // HOME SISWA
         composable(DestinasiHomeSis.route)
         {
