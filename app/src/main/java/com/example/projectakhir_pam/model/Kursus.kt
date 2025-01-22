@@ -13,6 +13,7 @@ data class Kursus(
     @SerialName("nama_kursus")
     val namaKursus: String,
     val deskripsi: String,
+    val kategori: String,
     val harga: String,
     val id_instruktur: String
 )
