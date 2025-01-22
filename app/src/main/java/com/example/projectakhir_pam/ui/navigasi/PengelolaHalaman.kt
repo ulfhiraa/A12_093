@@ -37,6 +37,8 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         navController = navController,
 //        startDestination = DestinasiHomeSis.route,
 //        startDestination = DestinasiHomeInst.route,
+//        startDestination = DestinasiHomeKursus.route,
+//        startDestination = DestinasiHomePend.route,
         startDestination = DestinasiHome.route,
         modifier = Modifier,
     ) {
@@ -46,7 +48,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         ){
             PilihanHomeView(
                 onKursusClick = {
-                    navController.navigate(DestinasiHomeKursus.route)
+             //       navController.navigate(DestinasiHomeKursus.route)
                 },
                 onSiswaClick = {
                     navController.navigate(DestinasiHomeSis.route)
@@ -55,7 +57,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     navController.navigate(DestinasiHomeInst.route)
                 },
                 onPendaftaranClick = {
-                    navController.navigate(DestinasiHomePend.route)
+               //     navController.navigate(DestinasiHomePend.route)
                 }
             )
             SectionHeader()
@@ -65,6 +67,9 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         composable(DestinasiHomeSis.route)
         {
             HomeSisView(
+                navigateBack = {
+                    navController.navigate(DestinasiHome.route)
+                },
                 navigateToItemEntry =
                 {
                     navController.navigate(DestinasiEntrySis.route)
@@ -81,8 +86,10 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
 
         // TAMBAH SISWA
         composable(DestinasiEntrySis.route) {
-            InsertSisView(navigateBack = {
-                navController.navigate(DestinasiHomeSis.route) {
+            InsertSisView(
+                navigateBack = {
+                    navController.navigate(DestinasiHomeSis.route)
+                {
                     popUpTo(DestinasiHomeSis.route) {
                         inclusive = true
                     }
@@ -136,6 +143,9 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         composable(DestinasiHomeInst.route)
         {
             HomeInstView(
+                navigateBack = {
+                    navController.navigate(DestinasiHome.route)
+                },
                 navigateToItemEntry =
                 {
                     navController.navigate(DestinasiEntryInst.route)
