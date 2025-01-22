@@ -1,0 +1,430 @@
+package com.example.projectakhir_pam.ui.view.Kursus
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.R
+import com.example.projectakhir_pam.model.Kursus
+import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
+import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurUiState
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurViewModel
+import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
+
+/*
+Home view untuk menampilkan daftar kursus dengan fitur CRUD, dan status UI (loading,success,error)
+*/
+
+object DestinasiHomeKur : DestinasiNavigasi {
+    override val route = "homeKursus" // rute navigasi
+    override val titleRes = "Home Kursus" // judul yang akan ditampilkan di halaman
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
+    navigateToItemEntry: () -> Unit,
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailKurClick: (String) -> Unit = {},
+    onEditKurClick: (String) -> Unit = {},
+    viewModel: HomeKurViewModel = viewModel(factory = PenyediaViewModel.Factory),
+){
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CustomeTopAppBar(
+                // Menampilkan judul "Home Kursus" dan tombol refresh untuk memuat ulang data kursus.
+                title = DestinasiHomeKur.titleRes,
+                canNavigateBack = true,
+                navigateUp = navigateBack,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getKur()
+                }
+            )
+        },
+        floatingActionButton = { // Tombol untuk menambahkan data kursus
+            FloatingActionButton(
+                onClick = navigateToItemEntry,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                            contentDescription = "Add Kursus"
+                    )
+                    Text(text = "Tambah Kursus") // Menambahkan teks "Tambah"
+                }
+            }
+        }
+    ) { innerPadding ->
+        HomeStatus(
+            homeKurUiState = viewModel.kurUIState,
+            retryAction = { viewModel.getKur() },
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            onDetailKurClick = onDetailKurClick,
+            onDeleteKurClick = {
+                viewModel.deleteKur(it.id_kursus ) // Mengambil data kursus dari repository
+                viewModel.getKur() // Menghapus kursus berdasarkan ID yang dipilih
+            },
+            onEditKurClick = onEditKurClick
+        )
+    }
+}
+
+@Composable
+fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
+    homeKurUiState: HomeKurUiState,
+    retryAction: () -> Unit, // untuk mencoba lagi jika pengambilan data gagal
+    modifier: Modifier = Modifier,
+    onDeleteKurClick: (Kursus) -> Unit = {},
+    onDetailKurClick: (String) -> Unit,
+    onEditKurClick: (String) -> Unit
+) {
+    when (
+        homeKurUiState) {
+        //Menampilkan gambar loading.
+        is HomeKurUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+        // Menampilkan daftar kursus jika data berhasil diambil.
+        is HomeKurUiState.Success ->
+            if (
+                homeKurUiState.kursus.isEmpty()){
+                return Box (modifier = modifier.
+                fillMaxSize(),
+                    contentAlignment = Alignment.Center) {
+                    Text(text = "Tidak ada Data Kursus" )
+                }
+            }else {
+                KurLayout(
+                    kursus = homeKurUiState.kursus,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailKurClick = {
+                        onDetailKurClick(it.id_kursus)
+                    },
+                    onDeleteKurClick = {
+                        onDeleteKurClick(it)
+                    },
+                    onEditKurClick = { kursus -> onEditKurClick(kursus.id_kursus) }
+                )
+            }
+
+        // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
+        is HomeKurUiState.Error -> OnError(
+            retryAction,
+            modifier = modifier.fillMaxSize()
+        )
+    }
+}
+
+@Composable
+fun OnLoading( modifier: Modifier = Modifier){
+    Image(
+        modifier = modifier.size(4.dp),
+        painter = painterResource(R.drawable.load),
+        contentDescription = stringResource(R.string.loading)
+    )
+}
+
+@Composable
+fun OnError(
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.load),
+            contentDescription = "Error Image",
+            modifier = Modifier
+                .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp
+        )
+        Text(
+            text = stringResource(R.string.loading_failed),
+            modifier = Modifier.padding(16.dp)
+        )
+        Button(onClick = retryAction)
+        {
+            Text(stringResource(R.string.retry))
+        }
+    }
+}
+
+@Composable
+fun KurLayout(
+    kursus: List<Kursus>,
+    modifier: Modifier = Modifier,
+    onDetailKurClick: (Kursus) -> Unit,
+    onDeleteKurClick: (Kursus) -> Unit = {},
+    onEditKurClick: (Kursus) -> Unit = {}
+) {
+    var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
+    var kurToDelete by remember { mutableStateOf<Kursus?>(null) }  // Menyimpan kursus yang akan dihapus
+
+    // Card utama yang membungkus seluruh tabel
+    Card(
+        modifier = modifier.fillMaxSize(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            KurHeader() // Header tabel dengan nama kolom
+
+            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah
+
+            // Data Kursus
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(kursus) { kurItem ->
+                    KurCard(
+                        kurItem = kurItem,
+                        onDetailKurClick = onDetailKurClick,
+                        onEditKurClick = onEditKurClick,
+                        onDeleteKurClick = {
+                            kurToDelete = kurItem
+                            showDialog = true
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    // Dialog konfirmasi untuk menghapus kursus
+    if (showDialog && kurToDelete != null) {
+        DeleteConfirmationDialog(
+            kursus = kurToDelete,
+            onConfirm = {
+                onDeleteKurClick(kurToDelete!!)
+                showDialog = false
+            },
+            onDismiss = { showDialog = false }
+        )
+    }
+}
+
+@Composable
+fun KurHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "ID Kursus",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(2f)
+        )
+        Text(
+            text = "Nama",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1.5f)
+        )
+        Text(
+            text = "Deskripsi",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1.5f)
+        )
+        Text(
+            text = "Kategori",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1.5f)
+        )
+        Text(
+            text = "Harga",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1.7f)
+        )
+        Text(
+            text = "ID Instruktur",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1.7f)
+        )
+    }
+}
+
+@Composable
+fun KurCard(
+    kurItem: Kursus,
+    onDetailKurClick: (Kursus) -> Unit,
+    onEditKurClick: (Kursus) -> Unit,
+    onDeleteKurClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(14.dp)
+    ) {
+        // Data Kursus (Preview)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = kurItem.id_kursus,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(2f)
+            )
+            Text(
+                text = kurItem.namaKursus.take(5) + "...", // Hanya tampilkan 5 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1.5f)
+            )
+            Text(
+                text = kurItem.deskripsi.take(5) + "...", // Hanya tampilkan 5 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1.5f)
+            )
+            Text(
+                text = kurItem.kategori.take(5) + "...", // Hanya tampilkan 5 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1.5f)
+            )
+            Text(
+                text = kurItem.harga.take(5) + "...", // Hanya tampilkan 5 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1.7f)
+            )
+        }
+
+        // Tombol Aksi; Detail, Edit, Hapus
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(60.dp)
+        ) {
+            // Button Detail
+            OutlinedButton(
+                onClick = { onDetailKurClick(kurItem) },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Detail",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Detail")
+            }
+
+            // Button Edit
+            OutlinedButton(
+                onClick = { onEditKurClick(kurItem) },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Edit")
+            }
+
+            // Button Hapus
+            OutlinedButton(
+                onClick = onDeleteKurClick,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Hapus",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Hapus")
+            }
+        }
+    }
+}
+
+@Composable
+fun DeleteConfirmationDialog(
+    kursus: Kursus?,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Konfirmasi Hapus") },
+        text = { Text("Apakah Anda yakin ingin menghapus data kursus " +
+                "${kursus?.namaKursus}?") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Hapus")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Batal")
+            }
+        }
+    )
+}
