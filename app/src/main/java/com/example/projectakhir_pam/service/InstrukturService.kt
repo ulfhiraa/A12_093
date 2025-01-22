@@ -31,9 +31,9 @@ interface InstrukturService {
     @POST("store")
     suspend fun insertInstruktur(@Body instruktur: Instruktur)
 
-    @PUT("{id_siswa}")
+    @PUT("{id_instruktur}")
     suspend fun updateInstruktur(@Path("id_instruktur") id_instruktur: String, @Body instruktur: Instruktur)
 
-    @DELETE("{id_siswa}")
+    @DELETE("{id_instruktur}")
     suspend fun deleteInstruktur(@Path("id_instruktur") id_instruktur: String): Response<Void>
 }
