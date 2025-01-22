@@ -77,7 +77,7 @@ fun HomeInstView(
             CustomeTopAppBar(
                 // Menampilkan judul "Home Instruktur" dan tombol refresh untuk memuat ulang data instruktur
                 title = DestinasiHomeInst.titleRes,
-                canNavigateBack = false,
+                canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
                     viewModel.getInst()
@@ -184,7 +184,7 @@ fun OnError(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Image(
-            painter = painterResource(id = R.drawable.failed),
+            painter = painterResource(id = R.drawable.load),
             contentDescription = "Error Image",
             modifier = Modifier
                 .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp
