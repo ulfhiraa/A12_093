@@ -191,6 +191,22 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
             color = Color.Red
         )
 
+        // TEXTFIELD Deskripsi
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = insertInstUiEvent.deskripsi,
+            onValueChange = {
+                onValueChange(insertInstUiEvent.copy(deskripsi = it))
+            },
+            label = { Text("Deskripsi Keahlian") },
+            isError = errorState.deskripsi != null,
+            placeholder = { Text("Masukkan Deskripsi Keahlian") }
+        )
+        Text(
+            text = errorState.deskripsi ?: "",
+            color = Color.Red
+        )
+
         if (enabled) {
             Text(
                 text = "Isi Semua Data!",

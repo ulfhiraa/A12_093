@@ -16,7 +16,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -63,6 +65,7 @@ object DestinasiHomeSis : DestinasiNavigasi {
 @Composable
 fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
     navigateToItemEntry: () -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
     onEditClick: (String) -> Unit = {},
@@ -76,7 +79,8 @@ fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
             CustomeTopAppBar(
                 // Menampilkan judul "Home Siswa" dan tombol refresh untuk memuat ulang data siswa.
                 title = DestinasiHomeSis.titleRes,
-                canNavigateBack = false,
+                canNavigateBack = true,
+                navigateUp = navigateBack,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
                     viewModel.getSis()
@@ -183,7 +187,7 @@ fun OnError(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Image(
-            painter = painterResource(id = R.drawable.failed),
+            painter = painterResource(id = R.drawable.load),
             contentDescription = "Error Image",
             modifier = Modifier
                 .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp
@@ -343,6 +347,12 @@ fun SisCard(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Detail",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(text = "Detail")
             }
 
@@ -367,6 +377,12 @@ fun SisCard(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Hapus",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(text = "Hapus")
             }
         }

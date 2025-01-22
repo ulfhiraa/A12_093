@@ -16,7 +16,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -64,6 +66,7 @@ object DestinasiHomeInst : DestinasiNavigasi {
 @Composable
 fun HomeInstView(
     navigateToItemEntry: () -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailInstClick: (String) -> Unit = {},
     onEditInstClick: (String) -> Unit = {},
@@ -78,6 +81,7 @@ fun HomeInstView(
                 // Menampilkan judul "Home Instruktur" dan tombol refresh untuk memuat ulang data instruktur
                 title = DestinasiHomeInst.titleRes,
                 canNavigateBack = true,
+                navigateUp = navigateBack,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
                     viewModel.getInst()
@@ -275,22 +279,22 @@ fun InstHeader() {
         Text(
             text = "Nama",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(3f)
+            modifier = Modifier.weight(1.5f)
         )
         Text(
             text = "Email",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+            modifier = Modifier.weight(1.5f)
         )
         Text(
             text = "No Telp",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+            modifier = Modifier.weight(1.5f)
         )
         Text(
             text = "Deskripsi",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+            modifier = Modifier.weight(1.7f)
         )
     }
 }
@@ -322,22 +326,22 @@ fun InstCard(
             Text(
                 text = instItem.namaInstruktur.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(3f)
+                modifier = Modifier.weight(1.5f)
             )
             Text(
-                text = instItem.email.take(6) + "...", // Hanya tampilkan 5 karakter
+                text = instItem.email.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(1.5f)
             )
             Text(
                 text = instItem.noTelpInst.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(1.5f)
             )
             Text(
                 text = instItem.deskripsi.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(1.7f)
             )
         }
 
@@ -346,7 +350,7 @@ fun InstCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(60.dp)
         ) {
             // Button Detail
             OutlinedButton(
@@ -354,6 +358,12 @@ fun InstCard(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Detail",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(text = "Detail")
             }
 
@@ -378,6 +388,12 @@ fun InstCard(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
             ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Hapus",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(text = "Hapus")
             }
         }
