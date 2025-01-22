@@ -102,7 +102,7 @@ fun HomeInstView(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Instruktur"
                     )
-                    Text(text = "Tambah Data")
+                    Text(text = "Tambah Instruktur")
                 }
             }
         }

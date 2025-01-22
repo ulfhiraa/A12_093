@@ -101,7 +101,7 @@ fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Siswa"
                     )
-                    Text(text = "Tambah Data") // Menambahkan teks "Tambah"
+                    Text(text = "Tambah Siswa") // Menambahkan teks "Tambah"
                 }
             }
         }
