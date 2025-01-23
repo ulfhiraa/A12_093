@@ -24,7 +24,7 @@ interface CourseContainer{
     val siswaRepository: SiswaRepository  // siswa
     val instrukturRepository: InstrukturRepository // instruktur
     val kursusRepository: KursusRepository // kursus
-    val pendaftaranRepository: Pendaftaran // pendaftaran
+    val pendaftaranRepository: PendaftaranRepository // pendaftaran
 }
 
 // untuk menyediakan
