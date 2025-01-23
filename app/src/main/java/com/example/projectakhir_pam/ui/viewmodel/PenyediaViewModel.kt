@@ -10,6 +10,10 @@ import com.example.projectakhir_pam.ui.viewmodel.Instruktur.DetailInstViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Instruktur.HomeInstViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Instruktur.InsertInstViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Instruktur.UpdateInstViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.DetailKurViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.InsertKurViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Kursus.UpdateKurViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailSisViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisViewModel
@@ -93,6 +97,46 @@ object PenyediaViewModel{
                 BimbelApplications()
                     .bimbelContainer
                     .instrukturRepository
+            )
+        }
+
+        // == DATA KURSUS ==
+
+        // HOME KURSUS
+        initializer {
+            HomeKurViewModel(
+                BimbelApplications()
+                    .bimbelContainer
+                    .kursusRepository
+            )
+        }
+
+        // INSERT KURSUS
+        initializer {
+            InsertKurViewModel(
+                BimbelApplications()
+                    .bimbelContainer
+                    .kursusRepository
+            )
+        }
+
+        // DETAIL KURSUS
+        initializer {
+            DetailKurViewModel(
+                createSavedStateHandle(),
+                BimbelApplications()
+                    .bimbelContainer
+                    .kursusRepository
+            )
+        }
+
+        // UPDATE KURSUS
+        initializer {
+            UpdateKurViewModel(
+                createSavedStateHandle(),
+                BimbelApplications()
+                    .bimbelContainer
+                    .kursusRepository
             )
         }
     }
