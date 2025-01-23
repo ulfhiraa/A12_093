@@ -17,6 +17,14 @@ import com.example.projectakhir_pam.ui.view.Instruktur.DetailInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.HomeInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.InsertInstView
 import com.example.projectakhir_pam.ui.view.Instruktur.UpdateInstView
+import com.example.projectakhir_pam.ui.view.Kursus.DestinasiDetailKur
+import com.example.projectakhir_pam.ui.view.Kursus.DestinasiEntryKur
+import com.example.projectakhir_pam.ui.view.Kursus.DestinasiHomeKur
+import com.example.projectakhir_pam.ui.view.Kursus.DestinasiUpdateKur
+import com.example.projectakhir_pam.ui.view.Kursus.DetailKurView
+import com.example.projectakhir_pam.ui.view.Kursus.HomeKurView
+import com.example.projectakhir_pam.ui.view.Kursus.InsertKurView
+import com.example.projectakhir_pam.ui.view.Kursus.UpdateKurView
 import com.example.projectakhir_pam.ui.view.PilihanHomeView
 import com.example.projectakhir_pam.ui.view.SectionHeader
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
@@ -48,7 +56,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
         ){
             PilihanHomeView(
                 onKursusClick = {
-             //       navController.navigate(DestinasiHomeKursus.route)
+                    navController.navigate(DestinasiHomeKur.route)
                 },
                 onSiswaClick = {
                     navController.navigate(DestinasiHomeSis.route)
@@ -207,6 +215,80 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     },
                     onNavigateUp =  {
                         navController.navigate(DestinasiHomeInst.route) }
+                )
+            }
+        }
+
+        // == DATA KURSUS ==
+
+        // HOME KURSUS
+        composable(DestinasiHomeKur.route)
+        {
+            HomeKurView(
+                navigateBack = {
+                    navController.navigate(DestinasiHome.route)
+                },
+                navigateToItemEntry =
+                {
+                    navController.navigate(DestinasiEntryKur.route)
+                },
+//                onDetailKursusClick =
+//                {
+//                    navController.navigate("${DestinasiDetailKur.route}/$it")
+//                },
+//                onEditKursusClick = {
+//                    navController.navigate("${DestinasiUpdateKur.route}/$it")
+//                }
+            )
+        }
+
+        // TAMBAH KURSUS
+        composable(DestinasiEntryKur.route) {
+            InsertKurView(navigateBack = {
+                navController.navigate(DestinasiHomeKur.route) {
+                    popUpTo(DestinasiHomeKur.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        // DETAIL KURSUS
+        composable(
+            DestinasiDetailKur.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailKur.id_kursus) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_kursus = it.arguments?.getString(DestinasiDetailKur.id_kursus)
+            id_kursus?.let { id_kursus ->
+                DetailKurView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+//
+        // UPDATE KURSUS
+        composable(
+            DestinasiUpdateKur.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdateKur.id_kursus) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_kursus = it.arguments?.getString(DestinasiUpdateKur.id_kursus)
+            id_kursus?.let { id_kursus ->
+                UpdateKurView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    onNavigateUp =  {
+                        navController.navigate(DestinasiHomeKur.route) }
                 )
             }
         }
