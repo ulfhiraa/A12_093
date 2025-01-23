@@ -225,9 +225,6 @@ fun KurLayout(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            KurHeader() // Header tabel dengan nama kolom
-
-            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah
 
             // Data Kursus
             LazyColumn(
@@ -263,46 +260,6 @@ fun KurLayout(
     }
 }
 
-@Composable
-fun KurHeader() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = "ID Kursus",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
-        )
-        Text(
-            text = "Nama",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "Deskripsi",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "Kategori",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "Harga",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.7f)
-        )
-        Text(
-            text = "ID Instruktur",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.7f)
-        )
-    }
-}
 
 @Composable
 fun KurCard(
@@ -326,12 +283,12 @@ fun KurCard(
             Text(
                 text = kurItem.id_kursus,
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(1.2f)
             )
             Text(
                 text = kurItem.namaKursus.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
+                modifier = Modifier.weight(1f)
             )
             Text(
                 text = kurItem.deskripsi.take(5) + "...", // Hanya tampilkan 5 karakter
@@ -344,7 +301,7 @@ fun KurCard(
                 modifier = Modifier.weight(1.5f)
             )
             Text(
-                text = kurItem.harga.take(5) + "...", // Hanya tampilkan 5 karakter
+                text = String.format("%.2f", kurItem.harga).take(5) + "...", // Format ke 2 desimal, lalu ambil 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1.7f)
             )
