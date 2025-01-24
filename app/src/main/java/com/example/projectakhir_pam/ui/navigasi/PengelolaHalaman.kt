@@ -25,6 +25,14 @@ import com.example.projectakhir_pam.ui.view.Kursus.DetailKurView
 import com.example.projectakhir_pam.ui.view.Kursus.HomeKurView
 import com.example.projectakhir_pam.ui.view.Kursus.InsertKurView
 import com.example.projectakhir_pam.ui.view.Kursus.UpdateKurView
+import com.example.projectakhir_pam.ui.view.Pendaftaran.DestinasiDetailPend
+import com.example.projectakhir_pam.ui.view.Pendaftaran.DestinasiEntryPend
+import com.example.projectakhir_pam.ui.view.Pendaftaran.DestinasiHomePend
+import com.example.projectakhir_pam.ui.view.Pendaftaran.DestinasiUpdatePend
+import com.example.projectakhir_pam.ui.view.Pendaftaran.DetailPendView
+import com.example.projectakhir_pam.ui.view.Pendaftaran.HomePendView
+import com.example.projectakhir_pam.ui.view.Pendaftaran.InsertPendView
+import com.example.projectakhir_pam.ui.view.Pendaftaran.UpdatePendView
 import com.example.projectakhir_pam.ui.view.PilihanHomeView
 import com.example.projectakhir_pam.ui.view.SectionHeader
 import com.example.projectakhir_pam.ui.view.Siswa.DestinasiDetailSis
@@ -65,7 +73,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     navController.navigate(DestinasiHomeInst.route)
                 },
                 onPendaftaranClick = {
-               //     navController.navigate(DestinasiHomePend.route)
+                    navController.navigate(DestinasiHomePend.route)
                 }
             )
             SectionHeader()
@@ -232,13 +240,13 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 {
                     navController.navigate(DestinasiEntryKur.route)
                 },
-//                onDetailKursusClick =
-//                {
-//                    navController.navigate("${DestinasiDetailKur.route}/$it")
-//                },
-//                onEditKursusClick = {
-//                    navController.navigate("${DestinasiUpdateKur.route}/$it")
-//                }
+                onDetailKurClick =
+                {
+                    navController.navigate("${DestinasiDetailKur.route}/$it")
+                },
+                onEditKurClick = {
+                    navController.navigate("${DestinasiUpdateKur.route}/$it")
+                }
             )
         }
 
@@ -289,6 +297,80 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     },
                     onNavigateUp =  {
                         navController.navigate(DestinasiHomeKur.route) }
+                )
+            }
+        }
+
+        // == DATA PENDAFTARAN ==
+
+        // HOME PENDAFTARAN
+        composable(DestinasiHomePend.route)
+        {
+            HomePendView(
+                navigateBack = {
+                    navController.navigate(DestinasiHome.route)
+                },
+                navigateToItemEntry =
+                {
+                    navController.navigate(DestinasiEntryPend.route)
+                },
+                onDetailPendClick =
+                {
+                    navController.navigate("${DestinasiDetailPend.route}/$it")
+                },
+                onEditPendClick = {
+                    navController.navigate("${DestinasiUpdateKur.route}/$it")
+                }
+            )
+        }
+
+        // TAMBAH PENDAFTARAN
+        composable(DestinasiEntryPend.route) {
+            InsertPendView(navigateBack = {
+                navController.navigate(DestinasiHomePend.route) {
+                    popUpTo(DestinasiHomePend.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        // DETAIL PENDAFTARAN
+        composable(
+            DestinasiDetailPend.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailPend.id_pendaftaran) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_pendaftaran = it.arguments?.getString(DestinasiDetailPend.id_pendaftaran)
+            id_pendaftaran?.let { id_pendaftaran ->
+                DetailPendView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+//
+        // UPDATE PENDAFTARAN
+        composable(
+            DestinasiUpdatePend.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdatePend.id_pendaftaran) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val id_pendaftaran = it.arguments?.getString(DestinasiUpdatePend.id_pendaftaran)
+            id_pendaftaran?.let { id_pendaftaran ->
+                UpdatePendView(
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    onNavigateUp =  {
+                        navController.navigate(DestinasiHomePend.route) }
                 )
             }
         }
