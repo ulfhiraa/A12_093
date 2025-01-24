@@ -45,17 +45,40 @@ object DestinasiHome : DestinasiNavigasi {
 fun SectionHeader() {
     Box(modifier = Modifier
         .fillMaxWidth()
-        .background(color = Color(0xFFc4b5c0),
-            RoundedCornerShape(bottomEnd = 50.dp)
+        .background(color = Color(0xFFd9d9d9),
+            RoundedCornerShape(bottomEnd = 100.dp)
         )
     ){
         Box(){
+            // LOGO
+            Column(modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center,
+
+//                horizontalAlignment = Alignment.Start,
+//                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(Modifier.padding(25.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = " ",
+                    Modifier
+                        .size(80.dp)
+//                        .clip(RoundedCornerShape(100.dp))
+//                        .shadow(50.dp, RoundedCornerShape(100.dp))
+                )
+            }
+
             Column (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp),
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceBetween,
+
+//                horizontalAlignment = Alignment.End,
+//                verticalArrangement = Arrangement.Center,
             ){
                 Spacer(Modifier.padding(30.dp))
                 Icon(
@@ -69,7 +92,7 @@ fun SectionHeader() {
                 Text(
                     text = "UTBK ",
                     style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.W300,
                         color = Color.Black,
                     ),
                     fontSize = 30.sp,
@@ -77,26 +100,11 @@ fun SectionHeader() {
                 Text(
                     text = "Course ",
                     style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Light,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 )
                 Spacer(Modifier.padding(16.dp))
-            }
-            Column(modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Spacer(Modifier.padding(20.dp))
-
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = " ",
-                    Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(100.dp))
-                        .shadow(50.dp, RoundedCornerShape(100.dp))
-                )
             }
         }
     }
@@ -129,13 +137,20 @@ fun PilihanHomeView(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Text(
-//                text = "Pilih Halaman",
-//                style = MaterialTheme.typography.headlineMedium,
-//                modifier = Modifier.padding(32.dp)
-//            )
+            Text(
+                text = "Selamat Datang! >_<",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(5.dp)
+            )
 
-            Spacer(modifier = Modifier.padding(bottom = 60.dp))
+            Text(
+                text = "                 Raih skor memuaskan" +
+                        "\ndan masuk PTN impianmu bersama kami \uD83D\uDCAA",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(5.dp)
+            )
+
+            Spacer(modifier = Modifier.padding(bottom = 40.dp))
 
             // Baris Pertama: Home Kursus & Home Siswa
             Row(

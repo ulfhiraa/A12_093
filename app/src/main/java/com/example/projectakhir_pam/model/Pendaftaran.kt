@@ -2,6 +2,7 @@ package com.example.projectakhir_pam.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Date
 
 // pendaftaran data model dan response classes untuk menangani respon API
 // mendefinisikan informasi entitas dan atribut
@@ -14,7 +15,8 @@ data class Pendaftaran(
 
     @SerialName("tanggal_pendaftaran")
     val tglDaftar: String,
-    val status: String
+//    val tglDaftar: Date,
+//    val status: String
 )
 
 // ADD - response JSON

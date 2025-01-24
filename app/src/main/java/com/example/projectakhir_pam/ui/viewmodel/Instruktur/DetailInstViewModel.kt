@@ -44,23 +44,6 @@ class DetailInstViewModel(savedStateHandle: SavedStateHandle,
             }
         }
     }
-
-    fun deleteInst() {
-        viewModelScope.launch {
-            detailInstUiState = DetailInstUiState(isLoading = true)
-            try {
-                instrukturRepository.deleteInstruktur(id_instruktur)
-
-                detailInstUiState = DetailInstUiState(isLoading = false)
-            } catch (e: Exception) {
-                detailInstUiState = DetailInstUiState(
-                    isLoading = false,
-                    isError = true,
-                    errorMessage = e.message ?: "Unknown Error"
-                )
-            }
-        }
-    }
 }
 
 data class DetailInstUiState(

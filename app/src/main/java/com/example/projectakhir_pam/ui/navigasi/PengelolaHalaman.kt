@@ -279,7 +279,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 )
             }
         }
-//
+
         // UPDATE KURSUS
         composable(
             DestinasiUpdateKur.routeWithArgs,
@@ -319,7 +319,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                     navController.navigate("${DestinasiDetailPend.route}/$it")
                 },
                 onEditPendClick = {
-                    navController.navigate("${DestinasiUpdateKur.route}/$it")
+                    navController.navigate("${DestinasiUpdatePend.route}/$it")
                 }
             )
         }
@@ -353,7 +353,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 )
             }
         }
-//
+
         // UPDATE PENDAFTARAN
         composable(
             DestinasiUpdatePend.routeWithArgs,

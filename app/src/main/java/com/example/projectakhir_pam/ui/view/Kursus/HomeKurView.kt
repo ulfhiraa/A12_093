@@ -1,12 +1,14 @@
 package com.example.projectakhir_pam.ui.view.Kursus
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,11 +16,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,6 +35,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -43,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.R
@@ -209,154 +219,202 @@ fun KurLayout(
     kursus: List<Kursus>,
     modifier: Modifier = Modifier,
     onDetailKurClick: (Kursus) -> Unit,
-    onDeleteKurClick: (Kursus) -> Unit = {},
-    onEditKurClick: (Kursus) -> Unit = {}
+    onEditKurClick: (Kursus) -> Unit,
+    onDeleteKurClick: (Kursus) -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
-    var kurToDelete by remember { mutableStateOf<Kursus?>(null) }  // Menyimpan kursus yang akan dihapus
+    var showDialog by remember { mutableStateOf(false) }
+    var kursusToDelete by remember { mutableStateOf<Kursus?>(null) }
 
-    // Card utama yang membungkus seluruh tabel
-    Card(
-        modifier = modifier.fillMaxSize(),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-
-            // Data Kursus
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(kursus) { kurItem ->
-                    KurCard(
-                        kurItem = kurItem,
-                        onDetailKurClick = onDetailKurClick,
-                        onEditKurClick = onEditKurClick,
-                        onDeleteKurClick = {
-                            kurToDelete = kurItem
-                            showDialog = true
-                        }
-                    )
+        items(kursus) { kurItem ->
+            KurCard(
+                kurItem = kurItem,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onDetailKurClick = onDetailKurClick,
+                onEditKurClick = onEditKurClick,
+                onDeleteKurClick = {
+                    kursusToDelete = kurItem
+                    showDialog = true
                 }
-            }
+            )
         }
     }
 
-    // Dialog konfirmasi untuk menghapus kursus
-    if (showDialog && kurToDelete != null) {
+    if (showDialog && kursusToDelete != null) {
         DeleteConfirmationDialog(
-            kursus = kurToDelete,
+            kursus = kursusToDelete,
             onConfirm = {
-                onDeleteKurClick(kurToDelete!!)
+                onDeleteKurClick(kursusToDelete!!)
                 showDialog = false
             },
-            onDismiss = { showDialog = false }
+            onDismiss = {
+                showDialog = false
+            }
         )
     }
 }
 
-
 @Composable
 fun KurCard(
     kurItem: Kursus,
+    modifier: Modifier = Modifier,
     onDetailKurClick: (Kursus) -> Unit,
     onEditKurClick: (Kursus) -> Unit,
-    onDeleteKurClick: () -> Unit
+    onDeleteKurClick: (Kursus) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(14.dp)
+    Card(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        // Data Kursus (Preview)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 12.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = kurItem.id_kursus,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1.2f)
-            )
-            Text(
-                text = kurItem.namaKursus.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = kurItem.deskripsi.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
-            )
-            Text(
-                text = kurItem.kategori.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
-            )
-            Text(
-                text = String.format("%.2f", kurItem.harga).take(5) + "...", // Format ke 2 desimal, lalu ambil 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.7f)
-            )
-        }
-
-        // Tombol Aksi; Detail, Edit, Hapus
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(60.dp)
-        ) {
-            // Button Detail
-            OutlinedButton(
-                onClick = { onDetailKurClick(kurItem) },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            // Detail Kursus (Kiri)
+            Column(
+                modifier = Modifier.weight(3f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Detail",
-                    modifier = Modifier.size(16.dp)
+                Text(
+                    text = kurItem.namaKursus,
+                    style = MaterialTheme.typography.titleLarge,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Detail")
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "ID Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = "${kurItem.id_kursus}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "Kategori Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = " ${kurItem.kategori}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Harga Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = "Rp${String.format("%.2f", kurItem.harga)}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = "Deskripsi Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = kurItem.deskripsi.take(10) + "...",
+                        style = MaterialTheme.typography.bodyLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Instruktur Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = "${kurItem.id_instruktur}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
-            // Button Edit
-            OutlinedButton(
-                onClick = { onEditKurClick(kurItem) },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
+            // Kolom Tombol (Kanan)
+            Column(
+                modifier = Modifier
+                    .weight(1.5f), // Atur agar kolom tombol hanya mengambil 1 bagian dari total ruang
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Edit")
-            }
+                OutlinedButton(
+                    onClick = { onDetailKurClick(kurItem) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Detail",
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Detail")
+                }
 
-            // Button Hapus
-            OutlinedButton(
-                onClick = onDeleteKurClick,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Hapus",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Hapus")
+                OutlinedButton(
+                    onClick = { onEditKurClick(kurItem) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Edit")
+                }
+
+                OutlinedButton(
+                    onClick = { onDeleteKurClick(kurItem) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Hapus",
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Hapus")
+                }
             }
         }
     }
@@ -385,3 +443,4 @@ fun DeleteConfirmationDialog(
         }
     )
 }
+

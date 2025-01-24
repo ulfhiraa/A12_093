@@ -322,30 +322,30 @@ fun PendCard(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(modifier = Modifier.width(8.dp)) // Memperlebar jarak antara icon dan teks
                     Text(
-                        text = "",
+                        text = pendItem.tglDaftar, // Menampilkan tanggal waktu pendaftaran
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
-                // STATUS PENDAFTARAN
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.List,
-                        contentDescription = "Status pendaftaran",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text(
-                        text = "${pendItem.status}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+//                // STATUS PENDAFTARAN
+//                Row(verticalAlignment = Alignment.CenterVertically) {
+//                    Icon(
+//                        imageVector = Icons.Default.List,
+//                        contentDescription = "Status pendaftaran",
+//                        tint = MaterialTheme.colorScheme.primary,
+//                        modifier = Modifier.size(20.dp)
+//                    )
+//                    Spacer(modifier = Modifier.width(2.dp))
+//                    Text(
+//                        text = "${pendItem.status}",
+//                        style = MaterialTheme.typography.bodyLarge,
+//                        overflow = TextOverflow.Ellipsis,
+//                        color = MaterialTheme.colorScheme.onSurfaceVariant
+//                    )
+//                }
             }
 
             // Kolom Tombol (Kanan)

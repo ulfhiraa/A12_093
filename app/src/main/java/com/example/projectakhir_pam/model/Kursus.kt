@@ -14,7 +14,7 @@ data class Kursus(
     val namaKursus: String,
     val deskripsi: String,
     val kategori: String,
-    val harga: String,
+    val harga: Double,
     val id_instruktur: String
 )
 

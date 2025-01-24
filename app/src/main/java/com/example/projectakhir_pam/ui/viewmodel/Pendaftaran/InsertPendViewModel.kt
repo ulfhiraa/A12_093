@@ -9,12 +9,12 @@ import com.example.projectakhir_pam.model.Pendaftaran
 import com.example.projectakhir_pam.repository.PendaftaranRepository
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-// Format tanggal dan waktu
 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) // Menambahkan waktu
+val date = Date() // Ambil tanggal saat ini
+val formattedDate = dateFormat.format(date)
 
 // ViewModel untuk mengelola input data pendaftaran
 class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel() {
@@ -65,13 +65,11 @@ fun parseDateTime(dateStr: String): String {
     }
 }
 
-// Representasi state UI untuk halaman input data pendaftaran
 data class InsertPendUiState(
     val insertPendUiEvent: InsertPendUiEvent = InsertPendUiEvent(),
     val isEntryValid: FormErrorPendState = FormErrorPendState()
 )
 
-// Data class untuk menangani error pada form
 data class FormErrorPendState(
     val id_pendaftaran: String? = null,
     val id_siswa: String? = null,
