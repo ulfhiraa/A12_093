@@ -2,6 +2,7 @@ package com.example.projectakhir_pam.ui.view.Kursus
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -12,11 +13,13 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -121,6 +124,9 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
     errorState: FormErrorKurState = FormErrorKurState(),
     enabled: Boolean = true
 ){
+
+    val kategori = listOf("Saintek", "Soshum") // list kategori saintek/soshum
+
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -173,17 +179,29 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
             color = Color.Red
         )
 
-        // TEXTFIELD Kategori
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertKurUiEvent.kategori,
-            onValueChange = {
-                onValueChange(insertKurUiEvent.copy(kategori = it))
-            },
-            label = { Text("Kategori") },
-            isError = errorState.kategori != null,
-            placeholder = { Text("Masukkan Kategori") },
-        )
+        Text(text = "Kategori")
+
+        // RADIO BUTTON Kategori
+        Row (
+            modifier = modifier.fillMaxWidth()
+        ){
+            kategori.forEach{ kt ->
+                Row (
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ){
+                    RadioButton(
+                        selected = insertKurUiEvent.kategori == kt,
+                        onClick = {
+                            onValueChange(insertKurUiEvent.copy(kategori = kt))
+                        },
+                    )
+                    Text(
+                        text = kt,
+                    )
+                }
+            }
+        }
         Text(
             text = errorState.kategori ?: "",
             color = Color.Red
