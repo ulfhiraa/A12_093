@@ -14,7 +14,10 @@ import com.example.projectakhir_pam.ui.viewmodel.Kursus.DetailKurViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.InsertKurViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.UpdateKurViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.DetailPendViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.HomePendViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.InsertPendViewModel
+import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.UpdatePendViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.DetailSisViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.HomeSisViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Siswa.InsertSisViewModel
@@ -152,34 +155,34 @@ object PenyediaViewModel{
             )
         }
 
-//        // INSERT PENDAFTARAN
-//        initializer {
-//            InsertPendViewModel(
-//                BimbelApplications()
-//                    .bimbelContainer
-//                    .pendaftaranRepository
-//            )
-//        }
-//
-//        // DETAIL PENDAFTARAN
-//        initializer {
-//            DetailPendViewModel(
-//                createSavedStateHandle(),
-//                BimbelApplications()
-//                    .bimbelContainer
-//                    .pendaftaranRepository
-//            )
-//        }
-//
-//        // UPDATE PENDAFTARAN
-//        initializer {
-//            UpdatePendViewModel(
-//                createSavedStateHandle(),
-//                BimbelApplications()
-//                    .bimbelContainer
-//                    .pendaftaranRepository
-//            )
-//        }
+        // INSERT PENDAFTARAN
+        initializer {
+            InsertPendViewModel(
+                BimbelApplications()
+                    .bimbelContainer
+                    .pendaftaranRepository
+            )
+        }
+
+        // DETAIL PENDAFTARAN
+        initializer {
+            DetailPendViewModel(
+                createSavedStateHandle(),
+                BimbelApplications()
+                    .bimbelContainer
+                    .pendaftaranRepository
+            )
+        }
+
+        // UPDATE PENDAFTARAN
+        initializer {
+            UpdatePendViewModel(
+                createSavedStateHandle(),
+                BimbelApplications()
+                    .bimbelContainer
+                    .pendaftaranRepository
+            )
+        }
     }
     fun CreationExtras.BimbelApplications(): BimbelApplications =
         (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BimbelApplications)
