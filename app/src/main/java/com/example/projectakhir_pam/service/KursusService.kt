@@ -11,6 +11,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 // untuk mendefinisikan endpoint API yang digunakan oleh aplikasi untuk berkomunikasi dengan server
 
@@ -27,6 +28,14 @@ interface KursusService {
 
     @GET("{id_kursus}")
     suspend fun  getKursusById(@Path("id_kursus") id_kursus: String): KursusResponseDetail
+
+    // fitur pencarian untuk memfilter kursus berdasarkan nama kursus, kategori, atau instruktur.
+    @GET("search")
+    suspend fun searchKursus(
+        @Query("nama_kursus") nama_kursus: String? = null,
+        @Query("kategori") kategori: String? = null,
+        @Query("id_instruktur") id_instruktur: String? = null
+    ): KursusResponse
 
     @POST("store")
     suspend fun insertKursus(@Body kursus: Kursus)
