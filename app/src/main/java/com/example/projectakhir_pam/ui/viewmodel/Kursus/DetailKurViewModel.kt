@@ -44,23 +44,6 @@ class DetailKurViewModel(savedStateHandle: SavedStateHandle,
             }
         }
     }
-
-    fun deleteKur() {
-        viewModelScope.launch {
-            detailKurUiState = DetailKurUiState(isLoading = true)
-            try {
-                kursusRepository.deleteKursus(id_kursus)
-
-                detailKurUiState = DetailKurUiState(isLoading = false)
-            } catch (e: Exception) {
-                detailKurUiState = DetailKurUiState(
-                    isLoading = false,
-                    isError = true,
-                    errorMessage = e.message ?: "Unknown Error"
-                )
-            }
-        }
-    }
 }
 
 data class DetailKurUiState(
