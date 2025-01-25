@@ -1,14 +1,12 @@
 package com.example.projectakhir_pam.ui.view.Kursus
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
@@ -25,19 +22,17 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -48,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -83,6 +77,10 @@ fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
     viewModel: HomeKurViewModel = viewModel(factory = PenyediaViewModel.Factory),
 ){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    // State untuk pencarian
+    var searchQuery by remember { mutableStateOf("") }
+
     Scaffold(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -117,19 +115,37 @@ fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
             }
         }
     ) { innerPadding ->
-        HomeStatus(
-            homeKurUiState = viewModel.kurUIState,
-            retryAction = { viewModel.getKur() },
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize(),
-            onDetailKurClick = onDetailKurClick,
-            onDeleteKurClick = {
-                viewModel.deleteKur(it.id_kursus ) // Mengambil data kursus dari repository
-                viewModel.getKur() // Menghapus kursus berdasarkan ID yang dipilih
-            },
-            onEditKurClick = onEditKurClick
-        )
+                .fillMaxSize()
+        ) {
+            // Pencarian
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Cari Kursus") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                singleLine = true
+            )
+
+            HomeStatus(
+                homeKurUiState = viewModel.kurUIState,
+                retryAction = { viewModel.getKur() },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp) // Padding yang konsisten
+                    .fillMaxSize(),
+                onDetailKurClick = onDetailKurClick,
+                onDeleteKurClick = {
+                    viewModel.deleteKur(it.id_kursus)
+                    viewModel.getKur()
+                },
+                onEditKurClick = onEditKurClick,
+                searchQuery = searchQuery // Menyaring kursus berdasarkan pencarian
+            )
+        }
     }
 }
 
@@ -140,41 +156,37 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
     modifier: Modifier = Modifier,
     onDeleteKurClick: (Kursus) -> Unit = {},
     onDetailKurClick: (String) -> Unit,
-    onEditKurClick: (String) -> Unit
+    onEditKurClick: (String) -> Unit,
+    searchQuery: String // Menambahkan searchQuery sebagai parameter
 ) {
-    when (
-        homeKurUiState) {
-        //Menampilkan gambar loading.
+    when (homeKurUiState) {
         is HomeKurUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
-        // Menampilkan daftar kursus jika data berhasil diambil.
-        is HomeKurUiState.Success ->
-            if (
-                homeKurUiState.kursus.isEmpty()){
-                return Box (modifier = modifier.
-                fillMaxSize(),
-                    contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada Data Kursus" )
-                }
-            }else {
-                KurLayout(
-                    kursus = homeKurUiState.kursus,
-                    modifier = modifier.fillMaxWidth(),
-                    onDetailKurClick = {
-                        onDetailKurClick(it.id_kursus)
-                    },
-                    onDeleteKurClick = {
-                        onDeleteKurClick(it)
-                    },
-                    onEditKurClick = { kursus -> onEditKurClick(kursus.id_kursus) }
-                )
+        is HomeKurUiState.Success -> {
+            val filteredKursus = homeKurUiState.kursus.filter { // filter kursus berdasarkan
+                it.namaKursus.contains(searchQuery, ignoreCase = true) || // nama kursus
+                        it.kategori.contains(searchQuery, ignoreCase = true) || // kategori
+                        it.id_instruktur.contains(searchQuery, ignoreCase = true) // ID Instruktur
             }
 
-        // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
-        is HomeKurUiState.Error -> OnError(
-            retryAction,
-            modifier = modifier.fillMaxSize()
-        )
+            if (filteredKursus.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Tidak ada Data Kursus yang sesuai dengan pencarian")
+                }
+            } else {
+                KurLayout(
+                    kursus = filteredKursus,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    onDetailKurClick = { onDetailKurClick(it.id_kursus) },
+                    onDeleteKurClick = { onDeleteKurClick(it) },
+                    onEditKurClick = { onEditKurClick(it.id_kursus) }
+                )
+            }
+        }
+
+        is HomeKurUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -370,8 +382,8 @@ fun KurCard(
             // Kolom Tombol (Kanan)
             Column(
                 modifier = Modifier
-                    .weight(1.5f), // Atur agar kolom tombol hanya mengambil 1 bagian dari total ruang
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                    .weight(1.7f), // Atur agar kolom tombol hanya mengambil 1 bagian dari total ruang
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlinedButton(
@@ -382,9 +394,9 @@ fun KurCard(
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Detail",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
                     Text(text = "Detail")
                 }
 
@@ -396,9 +408,9 @@ fun KurCard(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
                     Text(text = "Edit")
                 }
 
@@ -410,9 +422,9 @@ fun KurCard(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Hapus",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
                     Text(text = "Hapus")
                 }
             }

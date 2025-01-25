@@ -23,16 +23,10 @@ class HomeKurViewModel(private val kur: KursusRepository) : ViewModel() {
     var kurUIState: HomeKurUiState by mutableStateOf(HomeKurUiState.Loading)
         private set
 
-    // cari data
-    var searchResult: List<Kursus> by mutableStateOf(emptyList())
-        private set
-
-
     init {
         getKur() // untuk mengambil daftar kursus dari repository (KursusRepository)
     }
 
-    // Mengambil semua kursus
     fun getKur() {
         viewModelScope.launch {
             kurUIState = HomeKurUiState.Loading
@@ -46,6 +40,25 @@ class HomeKurViewModel(private val kur: KursusRepository) : ViewModel() {
         }
     }
 
+    // Menambahkan fungsi untuk pencarian kursus
+    fun searchKur(nama_kursus: String?, kategori: String?, id_instruktur: String?) {
+        viewModelScope.launch {
+            kurUIState = HomeKurUiState.Loading
+            try {
+                val response = kur.searchKursus(nama_kursus, kategori, id_instruktur)
+                if (response.data.isNotEmpty()) {
+                    kurUIState = HomeKurUiState.Success(response.data)
+                } else {
+                    kurUIState = HomeKurUiState.Error
+                }
+            } catch (e: IOException) {
+                kurUIState = HomeKurUiState.Error
+            } catch (e: HttpException) {
+                kurUIState = HomeKurUiState.Error
+            }
+        }
+    }
+
     //untuk menghapus data kursus berdasarkan ID yang diberikan
     fun deleteKur(id_kursus: String) {
         viewModelScope.launch {
@@ -55,21 +68,6 @@ class HomeKurViewModel(private val kur: KursusRepository) : ViewModel() {
                 HomeKurUiState.Error
             } catch (e: HttpException){
                 HomeKurUiState.Error
-            }
-        }
-    }
-
-    // Pencarian kursus berdasarkan nama, kategori, atau instruktur
-    fun searchKur(nama_kursus: String? = null, kategori: String? = null, id_instruktur: String? = null) {
-        viewModelScope.launch {
-            kurUIState = HomeKurUiState.Loading
-            try {
-                val response = kur.searchKursus(nama_kursus, kategori, id_instruktur)
-                searchResult = response.data
-            } catch (e: IOException) {
-                kurUIState = HomeKurUiState.Error
-            } catch (e: HttpException) {
-                kurUIState = HomeKurUiState.Error
             }
         }
     }

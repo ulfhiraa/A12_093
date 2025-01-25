@@ -29,12 +29,12 @@ interface KursusService {
     @GET("{id_kursus}")
     suspend fun  getKursusById(@Path("id_kursus") id_kursus: String): KursusResponseDetail
 
-    // fitur pencarian untuk memfilter kursus berdasarkan nama kursus, kategori, atau instruktur.
-    @GET("search")
+    // Menambahkan endpoint pencarian kursus
+    @GET("kursus/search")
     suspend fun searchKursus(
-        @Query("nama_kursus") nama_kursus: String? = null,
-        @Query("kategori") kategori: String? = null,
-        @Query("id_instruktur") id_instruktur: String? = null
+        @Query("nama_kursus") nama_kursus: String?,
+        @Query("kategori") kategori: String?,
+        @Query("id_instruktur") id_instruktur: String?
     ): KursusResponse
 
     @POST("store")
