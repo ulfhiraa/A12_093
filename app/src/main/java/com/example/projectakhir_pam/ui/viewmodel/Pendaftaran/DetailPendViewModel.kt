@@ -44,23 +44,6 @@ class DetailPendViewModel(savedStateHandle: SavedStateHandle,
             }
         }
     }
-
-    fun deletePend() {
-        viewModelScope.launch {
-            detailPendUiState = DetailPendUiState(isLoading = true)
-            try {
-                pendaftaranRepository.deletePendaftaran(id_pendaftaran)
-
-                detailPendUiState = DetailPendUiState(isLoading = false)
-            } catch (e: Exception) {
-                detailPendUiState = DetailPendUiState(
-                    isLoading = false,
-                    isError = true,
-                    errorMessage = e.message ?: "Unknown Error"
-                )
-            }
-        }
-    }
 }
 
 data class DetailPendUiState(

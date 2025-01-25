@@ -17,8 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
@@ -285,7 +287,7 @@ fun PendCard(
                 //NAMA SISWA relasi id_siswa
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Home,
+                        imageVector = Icons.Default.Face,
                         contentDescription = "ID Siswa",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
@@ -301,7 +303,7 @@ fun PendCard(
                 // NAMA KURSUS relasi id_kursus
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.CheckCircle,
+                        imageVector = Icons.Default.Home,
                         contentDescription = "ID Kursus",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
@@ -317,7 +319,7 @@ fun PendCard(
                 //TANGGAL PENDAFTARAN
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Info,
+                        imageVector = Icons.Default.DateRange,
                         contentDescription = "Tgl pendaftaran",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
@@ -424,4 +426,3 @@ fun DeleteConfirmationDialog(
         }
     )
 }
-

@@ -8,13 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.projectakhir_pam.model.Pendaftaran
 import com.example.projectakhir_pam.repository.PendaftaranRepository
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
-val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) // Menambahkan waktu
-val date = Date() // Ambil tanggal saat ini
-val formattedDate = dateFormat.format(date)
 
 // ViewModel untuk mengelola input data pendaftaran
 class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel() {
@@ -30,10 +23,10 @@ class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel()
     fun validateFields(): Boolean {
         val event = penduiState.insertPendUiEvent
         val errorState = FormErrorPendState(
-            id_pendaftaran = if (event.id_pendaftaran.isNotEmpty()) null else "ID Pendaftaran tidak boleh kosong",
+            id_pendaftaran  = if (event.id_pendaftaran.isNotEmpty()) null else "ID Pendaftaran tidak boleh kosong",
             id_siswa = if (event.id_siswa.isNotEmpty()) null else "ID Siswa tidak boleh kosong",
             id_kursus = if (event.id_kursus.isNotEmpty()) null else "ID Kursus tidak boleh kosong",
-            tglDaftar = if (event.tglDaftar.isNotEmpty()) null else "Tanggal Pendaftaran tidak boleh kosong"
+            tglDaftar = if (event.tglDaftar.isNotEmpty()) null else "Tanggal dan waktu pendaftaran tidak boleh kosong"
         )
         penduiState = penduiState.copy(isEntryValid = errorState)
         return errorState.isValid()
@@ -51,25 +44,13 @@ class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel()
     }
 }
 
-// Fungsi untuk mendapatkan tanggal dan waktu saat ini dengan format yang konsisten
-fun getCurrentDateTime(): String = dateFormat.format(Date())
-
-// Fungsi untuk mengubah String tanggal dengan waktu ke format Date
-fun parseDateTime(dateStr: String): String {
-    return try {
-        val parsedDate = dateFormat.parse(dateStr) ?: Date()
-        dateFormat.format(parsedDate)
-    } catch (e: Exception) {
-        e.printStackTrace() // Menangani kesalahan jika parsing gagal
-        dateFormat.format(Date()) // Mengembalikan tanggal dan waktu saat ini jika terjadi kesalahan
-    }
-}
-
+// Representasi state UI untuk halaman input data pendaftaran
 data class InsertPendUiState(
     val insertPendUiEvent: InsertPendUiEvent = InsertPendUiEvent(),
     val isEntryValid: FormErrorPendState = FormErrorPendState()
 )
 
+// Data class untuk menangani error pada form
 data class FormErrorPendState(
     val id_pendaftaran: String? = null,
     val id_siswa: String? = null,
@@ -87,7 +68,7 @@ data class InsertPendUiEvent(
     val id_pendaftaran: String = "",
     val id_siswa: String = "",
     val id_kursus: String = "",
-    val tglDaftar: String = getCurrentDateTime(), // Menggunakan fungsi untuk mendapatkan tanggal dan waktu default
+    val tglDaftar: String = ""
 )
 
 // Konversi dari event input pengguna (InsertPendUiEvent) menjadi entitas pendaftaran
@@ -95,7 +76,7 @@ fun InsertPendUiEvent.toPend(): Pendaftaran = Pendaftaran(
     id_pendaftaran = id_pendaftaran,
     id_siswa = id_siswa,
     id_kursus = id_kursus,
-    tglDaftar = parseDateTime(tglDaftar) // Menggunakan fungsi parseDateTime untuk menangani konversi tanggal dan waktu
+    tglDaftar = tglDaftar
 )
 
 // Konversi dari entitas pendaftaran menjadi status UI (InsertPendUiState)
@@ -108,5 +89,5 @@ fun Pendaftaran.toInsertUiEvent(): InsertPendUiEvent = InsertPendUiEvent(
     id_pendaftaran = id_pendaftaran,
     id_siswa = id_siswa,
     id_kursus = id_kursus,
-    tglDaftar = dateFormat.format(tglDaftar), // Konversi dari Date ke String
+    tglDaftar = tglDaftar
 )
