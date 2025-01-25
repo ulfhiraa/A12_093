@@ -16,6 +16,13 @@ interface KursusRepository {
     // mengambil data kursus berdasarkan id_kursus
     suspend fun getKursusById(id_kursus: String): Kursus
 
+    // mencari data berdasar kategori, id instruktur, nama kursus
+    suspend fun searchKursus(
+        nama_kursus: String? = null,
+        kategori: String? = null,
+        id_instruktur: String? = null
+    ): KursusResponse
+
     // menambah data
     suspend fun insertKursus(kursus: Kursus)
 
@@ -38,6 +45,15 @@ class NetworkKursusRepository(
 
     override suspend fun getKursusById(id_kursus: String): Kursus {
         return kursusApiService.getKursusById(id_kursus).data
+    }
+
+    // search
+    override suspend fun searchKursus(
+        nama_kursus: String?,
+        kategori: String?,
+        id_instruktur: String?
+    ): KursusResponse {
+        return kursusApiService.searchKursus(nama_kursus, kategori, id_instruktur)
     }
 
     override suspend fun insertKursus(kursus: Kursus) {
