@@ -138,21 +138,21 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
-        // TEXTFIELD ID Pendaftaran
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertPendUiEvent.id_pendaftaran,
-            onValueChange = {
-                onValueChange(insertPendUiEvent.copy(id_pendaftaran = it))
-            },
-            label = { Text("ID Pendaftaran") },
-            isError = errorState.id_pendaftaran != null,
-            placeholder = { Text("Masukkan ID Pendaftaran") },
-        )
-        Text(
-            text = errorState.id_pendaftaran ?: "",
-            color = Color.Red
-        )
+//        // TEXTFIELD ID Pendaftaran
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertPendUiEvent.id_pendaftaran,
+//            onValueChange = {
+//                onValueChange(insertPendUiEvent.copy(id_pendaftaran = it))
+//            },
+//            label = { Text("ID Pendaftaran") },
+//            isError = errorState.id_pendaftaran != null,
+//            placeholder = { Text("Masukkan ID Pendaftaran") },
+//        )
+//        Text(
+//            text = errorState.id_pendaftaran ?: "",
+//            color = Color.Red
+//        )
 
         // DROPDOWN ID SISWA (Display Nama Siswa)
         DropdownDataInt(
