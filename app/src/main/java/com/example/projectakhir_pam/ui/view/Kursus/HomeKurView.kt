@@ -1,6 +1,7 @@
 package com.example.projectakhir_pam.ui.view.Kursus
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -46,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -99,21 +102,33 @@ fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
                 }
             )
         },
-        floatingActionButton = { // Tombol untuk menambahkan data kursus
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(12.dp)
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FloatingActionButton(
+                    onClick = navigateToItemEntry,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter) // Menempatkan FAB di bawah tengah
+                        .padding(8.dp) // Jarak FAB dari tepi
+                        .background(Color.Transparent), // Latar belakang transparan
+                    elevation = FloatingActionButtonDefaults.elevation(14.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                            contentDescription = "Add Kursus"
-                    )
-                    Text(text = "Tambah Kursus") // Menambahkan teks "Tambah"
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Kursus",
+                            tint = Color.Black // Warna ikon
+                        )
+                        Text(
+                            text = "Tambah Kursus",
+                            color = Color.Black // Warna teks
+                        )
+                    }
                 }
             }
         }
