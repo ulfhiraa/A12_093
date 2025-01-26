@@ -139,21 +139,21 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
-        // TEXTFIELD ID Kursus
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertKurUiEvent.id_kursus,
-            onValueChange = {
-                onValueChange(insertKurUiEvent.copy(id_kursus = it))
-            },
-            label = { Text("ID Kursus") },
-            isError = errorState.id_kursus != null,
-            placeholder = { Text("Masukkan ID Kursus") },
-        )
-        Text(
-            text = errorState.id_kursus ?: "",
-            color = Color.Red
-        )
+//        // TEXTFIELD ID Kursus
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertKurUiEvent.id_kursus,
+//            onValueChange = {
+//                onValueChange(insertKurUiEvent.copy(id_kursus = it))
+//            },
+//            label = { Text("ID Kursus") },
+//            isError = errorState.id_kursus != null,
+//            placeholder = { Text("Masukkan ID Kursus") },
+//        )
+//        Text(
+//            text = errorState.id_kursus ?: "",
+//            color = Color.Red
+//        )
 
         // TEXTFIELD Nama Kursus
         OutlinedTextField(

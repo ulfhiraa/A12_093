@@ -23,7 +23,6 @@ class InsertKurViewModel(private val kur: KursusRepository) : ViewModel() {
     fun validateFields(): Boolean {
         val event = kuruiState.insertKurUiEvent
         val errorState = FormErrorKurState(
-            id_kursus = if (event.id_kursus.isNotEmpty()) null else "ID Kursus tidak boleh kosong",
             namaKursus = if (event.namaKursus.isNotEmpty()) null else "Nama Kursus tidak boleh kosong",
             deskripsi = if (event.deskripsi.isNotEmpty()) null else "Deskripsi tidak boleh kosong",
             kategori = if (event.kategori.isNotEmpty()) null else "Kategori tidak boleh kosong",
@@ -54,7 +53,6 @@ data class InsertKurUiState(
 
 // Data class untuk menangani error pada form
 data class FormErrorKurState(
-    val id_kursus: String? = null,
     val namaKursus: String? = null,
     val deskripsi: String? = null,
     val kategori: String? = null,
@@ -62,7 +60,7 @@ data class FormErrorKurState(
     val id_instruktur: String? = null
 ) {
     fun isValid(): Boolean {
-        return id_kursus == null && namaKursus == null
+        return  namaKursus == null
                 && deskripsi == null && kategori == null
                 && harga == null && id_instruktur == null
     }
