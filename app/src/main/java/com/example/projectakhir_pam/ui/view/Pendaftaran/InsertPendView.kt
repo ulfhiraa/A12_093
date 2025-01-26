@@ -30,6 +30,7 @@ import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.data.Status
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.customwidget.DropdownData
+import com.example.projectakhir_pam.ui.customwidget.DropdownDataInt
 import com.example.projectakhir_pam.ui.customwidget.DropdownStatus
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.FormErrorPendState
@@ -154,7 +155,7 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         )
 
         // DROPDOWN ID SISWA (Display Nama Siswa)
-        DropdownData(
+        DropdownDataInt(
             selectedValue = insertPendUiEvent.id_siswa,
             options = SiswaList.DataSiswa() ,
             label = "Pilih Siswa",

@@ -33,7 +33,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.data.InstrukturList
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.customwidget.DropdownData
-import com.example.projectakhir_pam.ui.customwidget.DropdownStatus
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.FormErrorKurState
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.InsertKurUiEvent
