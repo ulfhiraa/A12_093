@@ -12,21 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.Card
+
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -51,10 +48,13 @@ fun SectionHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color(0xFFf7f0f6), // Warna pink pastel lembut
+                color = Color(0xFF291010
+
+                ), // Warna pink pastel lembut
+                //color = Color(0xFFf7f0f6), // Warna pink pastel lembut
                 shape = RoundedCornerShape(bottomEnd = 100.dp)
             )
-            .padding(bottom = 50.dp)
+            .padding(bottom = 10.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -67,21 +67,32 @@ fun SectionHeader() {
             ) {
                 Spacer(modifier = Modifier.height(85.dp))
                 Text(
-                    text = "UTBK Course",
+                    text = "UTBK ",
                     style = TextStyle(
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.Bold,
                         fontSize = 40.sp,
-                        color = Color(0xFF333333) // Warna teks lebih gelap
+                        color = Color(0xFFf9f3f3) // Warna teks lebih gelap
                     )
                 )
+                Text(
+                    text = "Course ",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 40.sp,
+                        color = Color(0xFFf9f3f3) // Warna teks lebih gelap
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
                     text = "Ubur-ubur ikan lele, " +
                             "\nSukses di PTN impian lee!",
                     style = TextStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Light,
-                        fontSize = 25.sp,
+                        fontSize = 20.sp,
                         color = Color(0xFF7C7C7C) // Warna teks deskripsi lebih terang
                     )
                 )
@@ -110,7 +121,7 @@ fun PilihanHomeView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White) // Tambahkan warna latar jika diperlukan
+            .background(Color(0xFF3c2121))
     ) {
         // Header Section
         SectionHeader()
@@ -125,12 +136,12 @@ fun PilihanHomeView(
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = "안녕 하세요, \n" +
-                        "Selamat Datang! >_<",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(5.dp)
-            )
+//            Text(
+//                text = "안녕 하세요, \n" +
+//                        "Selamat Datang! >_<",
+//                style = MaterialTheme.typography.headlineSmall,
+//                modifier = Modifier.padding(5.dp)
+//            )
 
 //            Text(
 //                text = "                 Raih skor memuaskan" +
@@ -154,7 +165,10 @@ fun PilihanHomeView(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 8.dp)
-                        .shadow(12.dp)
+                        .shadow(12.dp),
+                    colors = CardDefaults.outlinedCardColors(
+                        //containerColor = Color(0xFFf3ebf3) // Pink pastel color
+                    )
                 ) {
                     Column(
                         modifier = Modifier
@@ -174,8 +188,9 @@ fun PilihanHomeView(
 
                         // Teks "Home Kursus"
                         Text(
-                            text = "Kursus",
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraBold),
+                            text = "K u r s u s",
+                            style = MaterialTheme.typography.titleMedium.copy
+                                (fontWeight = FontWeight.ExtraBold),
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(20.dp))
@@ -191,7 +206,7 @@ fun PilihanHomeView(
                         .shadow(12.dp)
                     ,
                     colors = CardDefaults.outlinedCardColors(
-                        // containerColor = Color(0xFFFFCDD2) // Pink pastel color
+                         //containerColor = Color(0xFFf3ebf3) // Pink pastel color
                     )
                 ) {
                     Column(
@@ -212,7 +227,7 @@ fun PilihanHomeView(
 
                         // Teks "Siswa"
                         Text(
-                            text = "Siswa",
+                            text = "S i s w a",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                             textAlign = TextAlign.Center
                         )
@@ -235,7 +250,10 @@ fun PilihanHomeView(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 8.dp)
-                        .shadow(12.dp)
+                        .shadow(12.dp),
+                    colors = CardDefaults.outlinedCardColors(
+                            //containerColor = Color(0xFFf3ebf3) // Pink pastel color
+                    )
                 ) {
                     Column(
                         modifier = Modifier
@@ -255,7 +273,7 @@ fun PilihanHomeView(
 
                         // Teks "Instruktur"
                         Text(
-                            text = "Instruktur",
+                            text = "I n s t r u k t u r",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                             textAlign = TextAlign.Center
                         )
@@ -269,7 +287,10 @@ fun PilihanHomeView(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 8.dp)
-                        .shadow(12.dp)
+                        .shadow(12.dp),
+                    colors = CardDefaults.outlinedCardColors(
+                        //containerColor = Color(0xFFf3ebf3) // Pink pastel color
+                    )
                 ) {
                     Column(
                         modifier = Modifier
@@ -289,7 +310,7 @@ fun PilihanHomeView(
 
                         // Teks "Pendaftaran"
                         Text(
-                            text = "Pendaftaran",
+                            text = "P e n d a f t a r a n",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                             textAlign = TextAlign.Center
                         )
