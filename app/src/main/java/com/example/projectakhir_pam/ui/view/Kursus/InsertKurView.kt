@@ -18,7 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +30,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.data.InstrukturList
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
+import com.example.projectakhir_pam.ui.customwidget.DropdownData
+import com.example.projectakhir_pam.ui.customwidget.DropdownStatus
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.FormErrorKurState
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.InsertKurUiEvent
@@ -124,6 +131,8 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
     errorState: FormErrorKurState = FormErrorKurState(),
     enabled: Boolean = true
 ){
+
+    var chosenDropdown by remember { mutableStateOf("") }
 
     val kategori = listOf("Saintek", "Soshum") // list kategori saintek/soshum
 
@@ -226,20 +235,18 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
             color = Color.Red
         )
 
-
-        // TEXTFIELD ID Instruktur
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertKurUiEvent.id_instruktur,
-            onValueChange = {
-                onValueChange(insertKurUiEvent.copy(id_instruktur = it))
-            },
-            label = { Text("ID Instruktur") },
-            isError = errorState.id_instruktur != null,
-            placeholder = { Text("Masukkan ID Instruktur") }
+        // DROPDOWN INSTRUKTUR
+        DropdownData(
+            selectedValue = insertKurUiEvent.id_instruktur,
+            options = InstrukturList.DataInstruktur() ,
+            label = "Pilih Instruktur",
+            onValueChangeEvent = { selected ->
+               chosenDropdown  = selected
+                onValueChange(insertKurUiEvent.copy(id_instruktur = selected))
+            }
         )
         Text(
-            text = errorState.id_instruktur ?: "",
+            text = errorState.id_instruktur ?: "",  // Menampilkan pesan error jika ada
             color = Color.Red
         )
 
