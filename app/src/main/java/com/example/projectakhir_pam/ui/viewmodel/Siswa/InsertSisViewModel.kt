@@ -24,7 +24,6 @@ class InsertSisViewModel(private val sis: SiswaRepository): ViewModel(){
     fun validateFields(): Boolean {
         val event = sisuiState.insertSisUiEvent
         val errorState = FormErrorState(
-//            id_siswa = if (event.id_siswa.isNotEmpty()) null else "ID Siswa tidak boleh kosong",
             namaSiswa = if (event.namaSiswa.isNotEmpty()) null else "Nama Siswa tidak boleh kosong",
             email = if (event.email.isNotEmpty()) null else "Email tidak boleh kosong",
             noTelpSiswa = if (event.noTelpSiswa.isNotEmpty()) null else "Nomor Telepon tidak boleh kosong"
@@ -53,7 +52,6 @@ data class InsertSisUiState(
 
 // data class  untuk menangani error pada form
 data class FormErrorState(
-//    val id_siswa: String? = null,
     val namaSiswa: String? = null,
     val email: String? = null,
     val noTelpSiswa: String? = null
@@ -61,13 +59,14 @@ data class FormErrorState(
     fun isValid(): Boolean {
         return  namaSiswa == null
                 && email == null && noTelpSiswa == null
-//        id_siswa == null
+
+
     }
 }
 
 //  menyimpan informasi inputan pengguna terkait data siswa
 data class InsertSisUiEvent(
-    val id_siswa: Int = 0,
+    val id_siswa: String = "",
     val namaSiswa: String = "",
     val email: String = "",
     val noTelpSiswa: String = ""
