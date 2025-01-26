@@ -233,7 +233,7 @@ fun InstTabel(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary)
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TableInst(text = "ID", width = 35.dp, isHeader = true)
@@ -261,10 +261,10 @@ fun InstTabel(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TableInst(text = inst.id_instruktur.toString(), width = 35.dp)
-                TableInst(text = inst.namaInstruktur.take(5) + "...", width = 40.dp)
-                TableInst(text = inst.email.take(5) + "...", width = 50.dp)
-                TableInst(text = inst.noTelpInst.take(5) + "...", width = 50.dp)
-                TableInst(text = inst.deskripsi.take(5) + "...", width = 35.dp)
+                TableInst(text = inst.namaInstruktur.take(4) + "...", width = 40.dp)
+                TableInst(text = inst.email.take(4) + "...", width = 50.dp)
+                TableInst(text = inst.noTelpInst.take(4) + "...", width = 50.dp)
+                TableInst(text = inst.deskripsi.take(4) + "...", width = 35.dp)
 
                 // Kolom Aksi
                 Column(
