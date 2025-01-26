@@ -15,13 +15,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.data.KursusList
+import com.example.projectakhir_pam.data.SiswaList
+import com.example.projectakhir_pam.data.Status
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
+import com.example.projectakhir_pam.ui.customwidget.DropdownData
+import com.example.projectakhir_pam.ui.customwidget.DropdownStatus
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.FormErrorPendState
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.InsertPendUiEvent
@@ -119,6 +128,11 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
     errorState: FormErrorPendState = FormErrorPendState(),
     enabled: Boolean = true
 ){
+
+    var listStatus by remember { mutableStateOf("") } // menampilkan pilihan status
+
+    var chosenDropdown by remember { mutableStateOf("") }
+
     Column (
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -139,37 +153,68 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
             color = Color.Red
         )
 
-        // TEXTFIELD ID Siswa
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertPendUiEvent.id_siswa,
-            onValueChange = {
-                onValueChange(insertPendUiEvent.copy(id_siswa = it))
-            },
-            label = { Text("ID Siswa") },
-            isError = errorState.id_siswa != null,
-            placeholder = { Text("Masukkan ID Siswa") },
+        // DROPDOWN ID SISWA (Display Nama Siswa)
+        DropdownData(
+            selectedValue = insertPendUiEvent.id_siswa,
+            options = SiswaList.DataSiswa() ,
+            label = "Pilih Siswa",
+            onValueChangeEvent = { selected ->
+                chosenDropdown  = selected
+                onValueChange(insertPendUiEvent.copy(id_siswa = selected))
+            }
         )
         Text(
-            text = errorState.id_siswa ?: "",
+            text = errorState.id_siswa ?: "",  // Menampilkan pesan error jika ada
             color = Color.Red
         )
 
-        // TEXTFIELD ID Kursus
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertPendUiEvent.id_kursus,
-            onValueChange = {
-                onValueChange(insertPendUiEvent.copy(id_kursus = it))
-            },
-            label = { Text("ID Kursus") },
-            isError = errorState.id_kursus != null,
-            placeholder = { Text("Masukkan ID Kursus") },
+        // DROPDOWN ID Kursus (Display Nama Kursus)
+        DropdownData(
+            selectedValue = insertPendUiEvent.id_kursus,
+            options = KursusList.DataKursus() ,
+            label = "Pilih Kursus",
+            onValueChangeEvent = { selected ->
+                chosenDropdown  = selected
+                onValueChange(insertPendUiEvent.copy(id_kursus = selected))
+            }
         )
         Text(
-            text = errorState.id_kursus ?: "",
+            text = errorState.id_kursus ?: "",  // Menampilkan pesan error jika ada
             color = Color.Red
         )
+
+
+//        // TEXTFIELD ID Siswa
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertPendUiEvent.id_siswa,
+//            onValueChange = {
+//                onValueChange(insertPendUiEvent.copy(id_siswa = it))
+//            },
+//            label = { Text("ID Siswa") },
+//            isError = errorState.id_siswa != null,
+//            placeholder = { Text("Masukkan ID Siswa") },
+//        )
+//        Text(
+//            text = errorState.id_siswa ?: "",
+//            color = Color.Red
+//        )
+
+//        // TEXTFIELD ID Kursus
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertPendUiEvent.id_kursus,
+//            onValueChange = {
+//                onValueChange(insertPendUiEvent.copy(id_kursus = it))
+//            },
+//            label = { Text("ID Kursus") },
+//            isError = errorState.id_kursus != null,
+//            placeholder = { Text("Masukkan ID Kursus") },
+//        )
+//        Text(
+//            text = errorState.id_kursus ?: "",
+//            color = Color.Red
+//        )
 
         // TEXTFIELD Tgl Pendaftaran
         OutlinedTextField(
@@ -184,6 +229,22 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         )
         Text(
             text = errorState.tglDaftar ?: "",
+            color = Color.Red
+        )
+
+        // DROPDOWN STATUS PENDAFTARAN
+        DropdownStatus(
+            selectedValue = insertPendUiEvent.status,
+            options = Status.listStatus,
+            label = "Pilih Status Pendaftaran",
+            onValueChangeEvent = { selected ->
+                listStatus = selected
+                onValueChange(insertPendUiEvent.copy(status = selected))
+            }
+        )
+
+        Text(
+            text = errorState.status ?: "",  // Menampilkan pesan error jika ada
             color = Color.Red
         )
 
