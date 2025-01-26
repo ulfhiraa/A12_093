@@ -1,14 +1,15 @@
 package com.example.projectakhir_pam.ui.view.Instruktur
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,16 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -43,6 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.R
@@ -88,21 +87,33 @@ fun HomeInstView(
                 }
             )
         },
-        floatingActionButton = { // Tombol untuk menambahkan data instruktur
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(12.dp)
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FloatingActionButton(
+                    onClick = navigateToItemEntry,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter) // Menempatkan FAB di bawah tengah
+                        .padding(8.dp) // Jarak FAB dari tepi
+                        .background(Color.Transparent), // Latar belakang transparan
+                    elevation = FloatingActionButtonDefaults.elevation(14.dp) // Hilangkan bayangan
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Instruktur"
-                    )
-                    Text(text = "Tambah Instruktur")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Instruktur",
+                            tint = Color.Black // Warna ikon
+                        )
+                        Text(
+                            text = "Tambah Instruktur",
+                            color = Color.Black // Warna teks
+                        )
+                    }
                 }
             }
         }
@@ -132,8 +143,7 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data instruktur
     onDetailInstClick: (String) -> Unit,
     onEditInstClick: (String) -> Unit
 ) {
-    when (
-        homeInstUiState) {
+    when (homeInstUiState) {
         //Menampilkan gambar loading.
         is HomeInstUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
@@ -141,22 +151,19 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data instruktur
         is HomeInstUiState.Success ->
             if (
                 homeInstUiState.instruktur.isEmpty()){
-                return Box (modifier = modifier.
-                fillMaxSize(),
-                    contentAlignment = Alignment.Center) {
+                return Box (
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center)
+                {
                     Text(text = "Tidak ada Data Instruktur" )
                 }
-            }else {
-                InstLayout(
-                    instruktur = homeInstUiState.instruktur,
+            } else {
+                InstTabel(
+                    instrukturList = homeInstUiState.instruktur,
                     modifier = modifier.fillMaxWidth(),
-                    onDetailInstClick = {
-                        onDetailInstClick(it.id_instruktur)
-                    },
-                    onDeleteInstClick = {
-                        onDeleteInstClick(it)
-                    },
-                    onEditInstClick = { instruktur -> onEditInstClick(instruktur.id_instruktur) }
+                    onDetailInstClick = { onDetailInstClick(it.id_instruktur) },
+                    onDeleteInstClick = { onDeleteInstClick(it) },
+                    onEditInstClick = { onEditInstClick(it.id_instruktur)}
                 )
             }
 
@@ -205,52 +212,104 @@ fun OnError(
 }
 
 @Composable
-fun InstLayout(
-    instruktur: List<Instruktur>,
+fun InstTabel(
+    instrukturList: List<Instruktur>,
     modifier: Modifier = Modifier,
     onDetailInstClick: (Instruktur) -> Unit,
     onDeleteInstClick: (Instruktur) -> Unit = {},
-    onEditInstClick: (Instruktur) -> Unit = {}
+    onEditInstClick: (Instruktur) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
     var instToDelete by remember { mutableStateOf<Instruktur?>(null) }  // Menyimpan instruktur yang akan dihapus
 
-    // Card utama yang membungkus seluruh tabel
-    Card(
-        modifier = modifier.fillMaxSize(),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    LazyColumn(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            InstHeader() // Header tabel dengan nama kolom
-
-            Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
-
-            // Data Instruktur
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+        // Header Tabel
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                items(instruktur) { instItem ->
-                    InstCard(
-                        instItem = instItem,
-                        onDetailInstClick = onDetailInstClick,
-                        onEditInstClick = onEditInstClick,
-                        onDeleteInstClick = {
-                            instToDelete = instItem
+                TableInst(text = "ID", width = 35.dp, isHeader = true)
+                TableInst(text = "Nama", width = 40.dp, isHeader = true)
+                TableInst(text = "Email", width = 50.dp, isHeader = true)
+                TableInst(text = "No.HP", width = 50.dp, isHeader = true)
+                TableInst(text = "Deskripsi", width = 70.dp, isHeader = true)
+                TableInst(text = "Aksi", width = 30.dp, isHeader = true)
+            }
+            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah yang lebih soft
+        }
+
+        // Baris Data Instruktur
+        items(instrukturList) { inst ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(
+                        if (instrukturList.indexOf(inst) % 2 == 0) Color(0xFFF3F4F6)
+                        else
+                            Color(0xFFEDEEF2)
+                    ) // Alternating row colors
+                    .padding(vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TableInst(text = inst.id_instruktur.toString(), width = 35.dp)
+                TableInst(text = inst.namaInstruktur.take(5) + "...", width = 40.dp)
+                TableInst(text = inst.email.take(5) + "...", width = 50.dp)
+                TableInst(text = inst.noTelpInst.take(5) + "...", width = 50.dp)
+                TableInst(text = inst.deskripsi.take(5) + "...", width = 35.dp)
+
+                // Kolom Aksi
+                Column(
+                    modifier = Modifier.width(65.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedButton(
+                        onClick = { onDetailInstClick(inst) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp),
+                        contentPadding = PaddingValues(4.dp) // Memperkecil padding dalam tombol
+                    ) {
+                        Text("Detail", style = MaterialTheme.typography.bodySmall)
+                    }
+                    OutlinedButton(
+                        onClick = { onEditInstClick(inst) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp),
+                        contentPadding = PaddingValues(4.dp)
+                    ) {
+                        Text("Edit", style = MaterialTheme.typography.bodySmall)
+                    }
+                    OutlinedButton(
+                        onClick =
+                        {
+                            instToDelete = inst
                             showDialog = true
-                        }
-                    )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp),
+                        contentPadding = PaddingValues(4.dp)
+                    ) {
+                        Text("Hapus", style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
+            Divider(color = Color(0xFFDDDDDD), thickness = 1.dp) // Garis pemisah soft
         }
     }
 
-    // Dialog konfirmasi untuk menghapus instruktur
+    // Dialog konfirmasi untuk menghapus data instruktur
     if (showDialog && instToDelete != null) {
         DeleteConfirmationDialog(
             instruktur = instToDelete,
@@ -264,144 +323,32 @@ fun InstLayout(
 }
 
 @Composable
-fun InstHeader() {
-    Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
-
-    Row(
+fun TableInst(
+    text: String,
+    width: Dp,
+    isHeader: Boolean = false)
+{
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .width(width),
+        contentAlignment = Alignment.CenterStart
     ) {
         Text(
-            text = "ID Instruktur",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
-        )
-        Text(
-            text = "Nama",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "Email",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "No Telp",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.5f)
-        )
-        Text(
-            text = "Deskripsi",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1.7f)
+            text = text,
+            style = if (isHeader) {
+                MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         )
     }
 }
 
-@Composable
-fun InstCard(
-    instItem: Instruktur,
-    onDetailInstClick: (Instruktur) -> Unit,
-    onEditInstClick: (Instruktur) -> Unit,
-    onDeleteInstClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-    ) {
-        // Data Instruktur (Preview)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = instItem.id_instruktur,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(2f)
-            )
-            Text(
-                text = instItem.namaInstruktur.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
-            )
-            Text(
-                text = instItem.email.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
-            )
-            Text(
-                text = instItem.noTelpInst.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.5f)
-            )
-            Text(
-                text = instItem.deskripsi.take(5) + "...", // Hanya tampilkan 5 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1.7f)
-            )
-        }
-
-        // Tombol Aksi; Detail, Edit, Hapus
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(60.dp)
-        ) {
-            // Button Detail
-            OutlinedButton(
-                onClick = { onDetailInstClick(instItem) },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Detail",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Detail")
-            }
-
-            // Button Edit
-            OutlinedButton(
-                onClick = { onEditInstClick(instItem) },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Edit")
-            }
-
-            // Button Hapus
-            OutlinedButton(
-                onClick = onDeleteInstClick,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Hapus",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Hapus")
-            }
-        }
-    }
-    Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
-}
 
 @Composable
 fun DeleteConfirmationDialog(
