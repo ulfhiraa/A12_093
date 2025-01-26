@@ -1,5 +1,6 @@
 package com.example.projectakhir_pam.ui.viewmodel.Instruktur
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
