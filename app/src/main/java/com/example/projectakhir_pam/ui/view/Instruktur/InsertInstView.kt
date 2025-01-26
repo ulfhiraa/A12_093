@@ -126,20 +126,20 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         // TEXTFIELD ID Instruktur
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertInstUiEvent.id_instruktur,
-            onValueChange = {
-                onValueChange(insertInstUiEvent.copy(id_instruktur = it))
-            },
-            label = { Text("ID Instruktur") },
-            isError = errorState.id_instruktur != null,
-            placeholder = { Text("Masukkan ID Instruktur") },
-        )
-        Text(
-            text = errorState.id_instruktur ?: "",
-            color = Color.Red
-        )
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertInstUiEvent.id_instruktur,
+//            onValueChange = {
+//                onValueChange(insertInstUiEvent.copy(id_instruktur = it))
+//            },
+//            label = { Text("ID Instruktur") },
+//            isError = errorState.id_instruktur != null,
+//            placeholder = { Text("Masukkan ID Instruktur") },
+//        )
+//        Text(
+//            text = errorState.id_instruktur ?: "",
+//            color = Color.Red
+//        )
 
         // TEXTFIELD Nama Instruktur
         OutlinedTextField(
