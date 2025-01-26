@@ -16,7 +16,12 @@ data class Pendaftaran(
     @SerialName("tanggal_pendaftaran")
     val tglDaftar: String,
 //    val tglDaftar: Date,
-//    val status: String
+    val status: String,
+
+//    @SerialName("nama_siswa")
+//    val namaSiswa: String,
+//    val namaKursus:String
+
 )
 
 // ADD - response JSON
