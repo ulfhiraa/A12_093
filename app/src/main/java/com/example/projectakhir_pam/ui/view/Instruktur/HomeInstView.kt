@@ -227,7 +227,7 @@ fun InstLayout(
         ) {
             InstHeader() // Header tabel dengan nama kolom
 
-            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah
+            Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
 
             // Data Instruktur
             LazyColumn(
@@ -265,6 +265,8 @@ fun InstLayout(
 
 @Composable
 fun InstHeader() {
+    Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -309,7 +311,7 @@ fun InstCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(14.dp)
+            .padding(10.dp)
     ) {
         // Data Instruktur (Preview)
         Row(
@@ -398,6 +400,7 @@ fun InstCard(
             }
         }
     }
+    Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
 }
 
 @Composable

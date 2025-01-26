@@ -226,7 +226,7 @@ fun SisLayout(
         ) {
             SisHeader() // Header tabel dengan nama kolom
 
-            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah
+            Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
 
             // Data siswa
             LazyColumn(
@@ -267,29 +267,62 @@ fun SisHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(16.dp)
     ) {
-        Text(
-            text = "ID Siswa",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+
+        // Kolom ID Siswa
+        Column(modifier = Modifier.weight(2f)) {
+            Text(
+                text = "ID Siswa",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        // Divider untuk pemisah vertikal setelah ID Siswa
+        Divider(
+            modifier = Modifier
+                .width(1.dp)
+                .padding(vertical = 2.dp),
+            color = Color.Gray
         )
-        Text(
-            text = "Nama Siswa",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(3f)
+
+        // Kolom Nama Siswa
+        Column(modifier = Modifier.weight(2f)) {
+            Text(
+                text = "Nama Siswa",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        // Divider untuk pemisah vertikal setelah Nama Siswa
+        Divider(
+            modifier = Modifier
+                .width(1.dp)
+                .padding(vertical = 8.dp),
+            color = Color.Gray
         )
-        Text(
-            text = "Email",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+
+        // Kolom Email
+        Column(modifier = Modifier.weight(1.5f)) {
+            Text(
+                text = "Email",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        // Divider untuk pemisah vertikal setelah Email
+        Divider(
+            modifier = Modifier
+                .width(1.dp)
+                .padding(vertical = 8.dp),
+            color = Color.Gray
         )
-        Text(
-            text = "No Telepon",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
-        )
+
+        // Kolom No Telp
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "No Telp",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }
 
@@ -303,13 +336,13 @@ fun SisCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(14.dp)
+            .padding(10.dp)
     ) {
         // Data siswa (Preview)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 12.dp),
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -318,19 +351,19 @@ fun SisCard(
                 modifier = Modifier.weight(2f)
             )
             Text(
-                text = siswaItem.namaSiswa.take(10) + "...", // Hanya tampilkan 10 karakter
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(3f)
-            )
-            Text(
-                text = siswaItem.email.take(6) + "...", // Hanya tampilkan 10 karakter
+                text = siswaItem.namaSiswa.take(5) + "...", // Hanya tampilkan 5 karakter
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(2f)
             )
             Text(
-                text = siswaItem.noTelpSiswa.take(5) + "...", // Hanya tampilkan 7 karakter
+                text = siswaItem.email.take(6) + "...", // Hanya tampilkan 6 karakter
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier.weight(1.5f)
+            )
+            Text(
+                text = siswaItem.noTelpSiswa.take(5) + "...", // Hanya tampilkan 5 karakter
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
             )
         }
 
@@ -339,7 +372,7 @@ fun SisCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(50.dp)
         ) {
             // Button Detail
             OutlinedButton(
@@ -387,6 +420,7 @@ fun SisCard(
             }
         }
     }
+    Divider(color = Color.Gray, thickness = 2.dp) // Garis pemisah
 }
 
 @Composable
