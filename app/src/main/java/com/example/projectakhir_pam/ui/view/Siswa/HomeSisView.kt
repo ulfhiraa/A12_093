@@ -58,21 +58,33 @@ fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
                 }
             )
         },
-        floatingActionButton = { // Tombol untuk menambahkan data siswa
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(12.dp)
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FloatingActionButton(
+                    onClick = navigateToItemEntry,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter) // Menempatkan FAB di bawah tengah
+                        .padding(8.dp) // Jarak FAB dari tepi
+                        .background(Color.Transparent), // Latar belakang transparan
+                    elevation = FloatingActionButtonDefaults.elevation(14.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Siswa"
-                    )
-                    Text(text = "Tambah Siswa") // Menambahkan teks "Tambah"
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Siswa",
+                            tint = Color.Black // Warna ikon
+                        )
+                        Text(
+                            text = "Tambah Siswa",
+                            color = Color.Black // Warna teks
+                        )
+                    }
                 }
             }
         }
