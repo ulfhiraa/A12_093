@@ -90,11 +90,11 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 {
                     navController.navigate(DestinasiEntrySis.route)
                 },
-                onDetailClick =
+                onDetailSisClick =
                 {
                     navController.navigate("${DestinasiDetailSis.route}/$it")
                 },
-                onEditClick = {
+                onEditSisClick = {
                     navController.navigate("${DestinasiUpdateSis.route}/$it")
                 }
             )
