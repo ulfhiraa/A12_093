@@ -43,23 +43,6 @@ class DetailSisViewModel(savedStateHandle: SavedStateHandle,
             }
         }
     }
-
-    fun deleteSis() {
-        viewModelScope.launch {
-            detailSisUiState = DetailSisUiState(isLoading = true)
-            try {
-                siswaRepository.deleteSiswa(id_siswa)
-
-                detailSisUiState = DetailSisUiState(isLoading = false)
-            } catch (e: Exception) {
-                detailSisUiState = DetailSisUiState(
-                    isLoading = false,
-                    isError = true,
-                    errorMessage = e.message ?: "Unknown Error"
-                )
-            }
-        }
-    }
 }
 
 data class DetailSisUiState(
