@@ -114,7 +114,7 @@ fun HomeSisView( // tampilan utama yang menampilkan daftar siswa
                 .fillMaxSize(),
             onDetailClick = onDetailClick,
             onDeleteClick = {
-                viewModel.deleteSis(it.id_siswa ) // Mengambil data siswa dari repository
+                viewModel.deleteSis(it.id_siswa.toString()) // Mengambil data siswa dari repository
                 viewModel.getSis() // Menghapus siswa berdasarkan ID yang dipilih
             },
             onEditClick = onEditClick
@@ -150,12 +150,12 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data siswa
                     siswa = homeSisUiState.siswa,
                     modifier = modifier.fillMaxWidth(),
                     onDetailClick = {
-                        onDetailClick(it.id_siswa)
+                        onDetailClick(it.id_siswa.toString())
                     },
                     onDeleteClick = {
                         onDeleteClick(it)
                     },
-                    onEditClick = { siswa -> onEditClick(siswa.id_siswa) }
+                    onEditClick = { siswa -> onEditClick(siswa.id_siswa.toString()) }
                 )
             }
 
@@ -346,7 +346,7 @@ fun SisCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = siswaItem.id_siswa,
+                text = siswaItem.id_siswa.toString(),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(2f)
             )

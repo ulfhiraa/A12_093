@@ -126,20 +126,20 @@ fun FormInput( // untuk menampilkan elemen input form seperti ID siswa, nama, em
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         // TEXTFIELD ID Siswa
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertSisUiEvent.id_siswa,
-            onValueChange = {
-                onValueChange(insertSisUiEvent.copy(id_siswa = it))
-            },
-            label = { Text("ID Siswa")},
-            isError = errorState.id_siswa != null,
-            placeholder = { Text("Masukkan ID Siswa")},
-        )
-        Text(
-            text = errorState.id_siswa ?: "",
-            color = Color.Red
-        )
+//        OutlinedTextField(
+//            modifier = Modifier.fillMaxWidth(),
+//            value = insertSisUiEvent.id_siswa,
+//            onValueChange = {
+//                onValueChange(insertSisUiEvent.copy(id_siswa = it))
+//            },
+//            label = { Text("ID Siswa")},
+//            isError = errorState.id_siswa != null,
+//            placeholder = { Text("Masukkan ID Siswa")},
+//        )
+//        Text(
+//            text = errorState.id_siswa ?: "",
+//            color = Color.Red
+//        )
 
         // TEXTFIELD Nama Siswa
         OutlinedTextField(
