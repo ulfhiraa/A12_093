@@ -23,7 +23,6 @@ class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel()
     fun validateFields(): Boolean {
         val event = penduiState.insertPendUiEvent
         val errorState = FormErrorPendState(
-            id_pendaftaran  = if (event.id_pendaftaran.isNotEmpty()) null else "ID Pendaftaran tidak boleh kosong",
             id_siswa = if (event.id_siswa.isNotEmpty()) null else "ID Siswa tidak boleh kosong",
             id_kursus = if (event.id_kursus.isNotEmpty()) null else "ID Kursus tidak boleh kosong",
             tglDaftar = if (event.tglDaftar.isNotEmpty()) null else "Tanggal dan waktu pendaftaran tidak boleh kosong",
@@ -53,14 +52,13 @@ data class InsertPendUiState(
 
 // Data class untuk menangani error pada form
 data class FormErrorPendState(
-    val id_pendaftaran: String? = null,
     val id_siswa: String? = null,
     val id_kursus: String? = null,
     val tglDaftar: String? = null,
     val status: String? = null
 ) {
     fun isValid(): Boolean {
-        return id_pendaftaran == null && id_siswa == null
+        return  id_siswa == null
                 && id_kursus == null && tglDaftar == null
                 && status == null
     }
