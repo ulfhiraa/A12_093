@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -43,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -125,6 +128,13 @@ fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 label = { Text("Cari Kursus") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Ikon Pencarian",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -169,9 +179,9 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
                         it.id_instruktur.contains(searchQuery, ignoreCase = true) // ID Instruktur
             }
 
-            if (filteredKursus.isEmpty()) {
+            if (filteredKursus.isEmpty()) {// jika data yang dicari tidak ada atau data kosong
                 Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada Data Kursus yang sesuai dengan pencarian")
+                    Text(text = "Tidak ada Data Kursus")
                 }
             } else {
                 KurLayout(
@@ -239,8 +249,8 @@ fun KurLayout(
 
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(4.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         items(kursus) { kurItem ->
             KurCard(
@@ -279,17 +289,20 @@ fun KurCard(
     onEditKurClick: (Kursus) -> Unit,
     onDeleteKurClick: (Kursus) -> Unit
 ) {
+    Spacer(modifier = Modifier.height(8.dp))
+
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 13.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(18.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+
             // Detail Kursus (Kiri)
             Column(
                 modifier = Modifier.weight(3f),
@@ -300,6 +313,8 @@ fun KurCard(
                     style = MaterialTheme.typography.titleLarge,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -316,6 +331,9 @@ fun KurCard(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(2.dp))
+
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
@@ -330,6 +348,8 @@ fun KurCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -346,6 +366,8 @@ fun KurCard(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(2.dp))
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.List,
@@ -361,6 +383,8 @@ fun KurCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -383,9 +407,11 @@ fun KurCard(
             Column(
                 modifier = Modifier
                     .weight(1.7f), // Atur agar kolom tombol hanya mengambil 1 bagian dari total ruang
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(10.dp))
+
                 OutlinedButton(
                     onClick = { onDetailKurClick(kurItem) },
                     modifier = Modifier

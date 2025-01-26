@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,7 +78,9 @@ fun HomePendView( // tampilan utama yang menampilkan daftar pendaftaran
     onEditPendClick: (String) -> Unit = {},
     viewModel: HomePendViewModel = viewModel(factory = PenyediaViewModel.Factory),
 ){
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -221,8 +225,8 @@ fun PendLayout(
 
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(18.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         items(pendaftaran) { pendItem ->
             PendCard(
@@ -264,12 +268,12 @@ fun PendCard(
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // Detail Pendaftaran (Kiri)
@@ -281,8 +285,11 @@ fun PendCard(
                 Text(
                     text = pendItem.id_pendaftaran,
                     style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.W500,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                Spacer(modifier = Modifier.height(1.dp))
 
                 //NAMA SISWA relasi id_siswa
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -300,6 +307,8 @@ fun PendCard(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(1.dp))
+
                 // NAMA KURSUS relasi id_kursus
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -315,6 +324,8 @@ fun PendCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                Spacer(modifier = Modifier.height(1.dp))
 
                 //TANGGAL PENDAFTARAN
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -332,31 +343,35 @@ fun PendCard(
                     )
                 }
 
-//                // STATUS PENDAFTARAN
-//                Row(verticalAlignment = Alignment.CenterVertically) {
-//                    Icon(
-//                        imageVector = Icons.Default.List,
-//                        contentDescription = "Status pendaftaran",
-//                        tint = MaterialTheme.colorScheme.primary,
-//                        modifier = Modifier.size(20.dp)
-//                    )
-//                    Spacer(modifier = Modifier.width(2.dp))
-//                    Text(
-//                        text = "${pendItem.status}",
-//                        style = MaterialTheme.typography.bodyLarge,
-//                        overflow = TextOverflow.Ellipsis,
-//                        color = MaterialTheme.colorScheme.onSurfaceVariant
-//                    )
-//                }
+                Spacer(modifier = Modifier.height(1.dp))
+
+                // STATUS PENDAFTARAN
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = "Status pendaftaran",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = "${pendItem.status}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             // Kolom Tombol (Kanan)
             Column(
                 modifier = Modifier
                     .weight(1.5f), // Atur agar kolom tombol hanya mengambil 1 bagian dari total ruang
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(2.dp))
+
                 OutlinedButton(
                     onClick = { onDetailPendClick(pendItem) },
                     modifier = Modifier
