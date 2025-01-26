@@ -24,7 +24,6 @@ class InsertInstViewModel(private val inst: InstrukturRepository): ViewModel(){
     fun validateFields(): Boolean {
         val event = instuiState.insertInstUiEvent
         val errorState = FormErrorState(
-            id_instruktur = if (event.id_instruktur.isNotEmpty()) null else "ID Instruktur tidak boleh kosong",
             namaInstruktur = if (event.namaInstruktur.isNotEmpty()) null else "Nama Instruktur tidak boleh kosong",
             email = if (event.email.isNotEmpty()) null else "Email tidak boleh kosong",
             noTelpInst = if (event.noTelpInst.isNotEmpty()) null else "Nomor Telepon tidak boleh kosong",
@@ -54,14 +53,13 @@ data class InsertInstUiState(
 
 // data class  untuk menangani error pada form
 data class FormErrorState(
-    val id_instruktur: String? = null,
     val namaInstruktur: String? = null,
     val email: String? = null,
     val noTelpInst: String? = null,
     val deskripsi: String? = null
 ){
     fun isValid(): Boolean {
-        return id_instruktur == null && namaInstruktur == null
+        return namaInstruktur == null
                 && email == null && noTelpInst == null && deskripsi == null
     }
 }
