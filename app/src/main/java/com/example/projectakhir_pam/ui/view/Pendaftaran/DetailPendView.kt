@@ -29,6 +29,11 @@ import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.DetailPendUiState
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.DetailPendViewModel
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.toPend
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 // detail view : untuk menampilkan detail data pendaftaran
 
@@ -115,6 +120,21 @@ fun ItemDetailPend( // untuk menampilkan informasi pendaftaran dalam card
     modifier: Modifier = Modifier,
     pendaftaran: Pendaftaran,
 ){
+
+    // Format input (waktu UTC)
+    val isoDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    isoDateFormat.timeZone = TimeZone.getTimeZone("UTC") // Pastikan UTC sebagai zona waktu input
+
+    // Format output (menampilkan waktu WIB)
+    val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale("id", "ID"))
+    displayDateFormat.timeZone = TimeZone.getTimeZone("Asia/Jakarta") // Set ke WIB (Asia/Jakarta)
+
+    // Mengonversi waktu UTC ke Date
+    val utcDate = isoDateFormat.parse(pendaftaran.tglDaftar)
+
+    // Format menjadi waktu WIB
+    val formattedDate = utcDate?.let { displayDateFormat.format(it) } ?: pendaftaran.tglDaftar
+
     Card(
         modifier = modifier.fillMaxWidth().padding(top = 20.dp),
         colors = CardDefaults.cardColors(
@@ -132,7 +152,7 @@ fun ItemDetailPend( // untuk menampilkan informasi pendaftaran dalam card
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailPend(judul = "ID Kursus", isinya = pendaftaran.id_kursus)
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "Tanggal dan waktu pendaftaran", isinya = pendaftaran.tglDaftar)
+            ComponentDetailPend(judul = "Tanggal dan waktu pendaftaran", isinya = formattedDate)
             Spacer(modifier = Modifier.padding(4.dp))
         }
     }
