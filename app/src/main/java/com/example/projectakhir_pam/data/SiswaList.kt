@@ -11,7 +11,7 @@ object SiswaList {
 @Composable
     fun DataSiswa(
         homeSisViewModel: HomeSisViewModel = viewModel(factory = PenyediaViewModel.Factory)
-    ): List<Pair<Int, String>> {
+    ): List<Pair<String, String>> {
         // Observasi state dari HomeSisViewModel
         val sisUiState = homeSisViewModel.sisUIState
 
