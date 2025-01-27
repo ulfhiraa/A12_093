@@ -126,7 +126,7 @@ fun ItemDetailSis( // untuk menampilkan informasi siswa dalam kartu
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            ComponentDetailSis(judul = "Id Siswa", isinya = siswa.id_siswa.toString())
+            ComponentDetailSis(judul = "Id Siswa", isinya = siswa.id_siswa)
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailSis(judul = "Nama Siswa", isinya = siswa.namaSiswa)
             Spacer(modifier = Modifier.padding(4.dp))
