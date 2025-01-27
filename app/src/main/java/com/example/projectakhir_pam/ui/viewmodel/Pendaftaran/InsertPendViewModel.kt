@@ -25,7 +25,8 @@ class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel()
         val errorState = FormErrorPendState(
             id_siswa = if (event.id_siswa.isNotEmpty()) null else "ID Siswa tidak boleh kosong",
             id_kursus = if (event.id_kursus.isNotEmpty()) null else "ID Kursus tidak boleh kosong",
-            status = if (event.status.isNotEmpty()) null else "Status pendaftaran tidak boleh kosong"
+            status = if (event.status.isNotEmpty()) null else "Status pendaftaran tidak boleh kosong",
+            kategori = if (event.kategori.isNotEmpty()) null else "kategori tidak boleh kosong"
         )
         penduiState = penduiState.copy(isEntryValid = errorState)
         return errorState.isValid()
@@ -53,12 +54,14 @@ data class InsertPendUiState(
 data class FormErrorPendState(
     val id_siswa: String? = null,
     val id_kursus: String? = null,
-    val status: String? = null
+    val status: String? = null,
+    val kategori: String? = null
 ) {
     fun isValid(): Boolean {
         return  id_siswa == null
                 && id_kursus == null
                 && status == null
+                && kategori == null
     }
 }
 
@@ -68,7 +71,8 @@ data class InsertPendUiEvent(
     val id_siswa: String = "",
     val id_kursus: String = "",
     val tglDaftar: String = "", // Tetap menggunakan String untuk input tanggal
-    val status: String = ""
+    val status: String = "",
+    val kategori: String = ""
 )
 
 // Konversi dari event input pengguna (InsertPendUiEvent) menjadi entitas pendaftaran
@@ -77,7 +81,8 @@ fun InsertPendUiEvent.toPend(): Pendaftaran = Pendaftaran(
     id_siswa = id_siswa,
     id_kursus = id_kursus,
     tglDaftar = tglDaftar, // Mengonversi String ke Date
-    status = status
+    status = status,
+    kategori = kategori
 )
 
 // Konversi dari entitas pendaftaran menjadi status UI (InsertPendUiState)
@@ -91,5 +96,6 @@ fun Pendaftaran.toInsertUiEvent(): InsertPendUiEvent = InsertPendUiEvent(
     id_siswa = id_siswa,
     id_kursus = id_kursus,
     tglDaftar = tglDaftar,
-    status = status
+    status = status,
+    kategori = kategori
 )
