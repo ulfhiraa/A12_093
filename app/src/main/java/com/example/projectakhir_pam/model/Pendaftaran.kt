@@ -1,7 +1,9 @@
 package com.example.projectakhir_pam.model
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 import java.util.Date
 
 // pendaftaran data model dan response classes untuk menangani respon API
@@ -14,14 +16,10 @@ data class Pendaftaran(
     val id_kursus: String,
 
     @SerialName("tanggal_pendaftaran")
-    val tglDaftar: String,
-//    val tglDaftar: Date,
-    val status: String,
+    @Contextual // Menambahkan anotasi @Contextual untuk mengenalkan tipe data localdatetime
+    val tglDaftar: LocalDateTime, // Menggunakan LocalDateTime langsung
 
-//    @SerialName("nama_siswa")
-//    val namaSiswa: String,
-//    val namaKursus:String
-
+    val status: String
 )
 
 // ADD - response JSON
