@@ -290,7 +290,7 @@ fun OnError(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Image(
-            painter = painterResource(id = R.drawable.load),
+            painter = painterResource(id = R.drawable.failed),
             contentDescription = "Error Image",
             modifier = Modifier
                 .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp
