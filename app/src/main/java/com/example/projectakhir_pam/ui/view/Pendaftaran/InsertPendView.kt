@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,7 +29,6 @@ import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.data.Status
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.customwidget.DropdownData
-import com.example.projectakhir_pam.ui.customwidget.DropdownDataInt
 import com.example.projectakhir_pam.ui.customwidget.DropdownStatus
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.FormErrorPendState
@@ -139,7 +137,7 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         // DROPDOWN ID SISWA (Display Nama Siswa)
-        DropdownDataInt(
+        DropdownData(
             selectedValue = insertPendUiEvent.id_siswa,
             options = SiswaList.DataSiswa() ,
             label = "Pilih Siswa",
