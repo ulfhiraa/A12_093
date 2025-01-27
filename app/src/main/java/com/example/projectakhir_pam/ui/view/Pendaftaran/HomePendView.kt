@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -31,6 +33,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -47,10 +51,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -84,10 +91,11 @@ fun HomePendView( // tampilan utama yang menampilkan daftar pendaftaran
     modifier: Modifier = Modifier,
     onDetailPendClick: (String) -> Unit = {},
     onEditPendClick: (String) -> Unit = {},
-    viewModel: HomePendViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    viewModel: HomePendViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    var selectedCategory by remember { mutableStateOf("Sort by") }
 
     Scaffold(
         modifier = modifier
@@ -135,19 +143,76 @@ fun HomePendView( // tampilan utama yang menampilkan daftar pendaftaran
             }
         }
     ) { innerPadding ->
-        HomeStatus(
-            homePendUiState = viewModel.pendUIState,
-            retryAction = { viewModel.getPend() },
+        Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+
+            // Dropdown untuk memilih kategori
+            CategoryFilterDropdown(
+                selectedCategory = selectedCategory,
+                onCategorySelected = { selectedCategory = it }
+            )
+
+            // Tampilkan daftar berdasarkan kategori yang dipilih
+            HomeStatus(
+                homePendUiState = viewModel.pendUIState,
+                retryAction = { viewModel.getPend() },
+                modifier = Modifier.fillMaxSize(),
+                selectedCategory = selectedCategory,
+                onDetailPendClick = onDetailPendClick,
+                onDeletePendClick = {
+                    viewModel.deletePend(it.id_pendaftaran) // Mengambil data pendaftaran dari repository
+                    viewModel.getPend() // Menghapus pendaftaran berdasarkan ID yang dipilih
+                },
+                onEditPendClick = onEditPendClick
+            )
+        }
+    }
+}
+
+@Composable
+fun CategoryFilterDropdown(
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        contentAlignment = Alignment.Center // Pindahkan ke pojok kanan
+    ) {
+        OutlinedButton(
+            onClick = { expanded = true },
+            shape = RectangleShape, // Menjadikan tombol berbentuk persegi
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            onDetailPendClick = onDetailPendClick,
-            onDeletePendClick = {
-                viewModel.deletePend(it.id_pendaftaran ) // Mengambil data pendaftaran dari repository
-                viewModel.getPend() // Menghapus pendaftaran berdasarkan ID yang dipilih
-            },
-            onEditPendClick = onEditPendClick
-        )
+                .width(120.dp) // Tentukan lebar jika diperlukan
+                .height(40.dp) // Tentukan tinggi jika diperlukan
+        ) {
+
+            Spacer(modifier = Modifier.width(5.dp)) // Jarak antara ikon dan teks
+
+            Text(text = selectedCategory)
+
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown, // Ganti dengan ikon yang diinginkan
+                contentDescription = "Dropdown Icon",
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            listOf("All", "Saintek", "Soshum").forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category) },
+                    onClick = {
+                        onCategorySelected(category)
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -158,25 +223,29 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data pendaftaran
     modifier: Modifier = Modifier,
     onDeletePendClick: (Pendaftaran) -> Unit = {},
     onDetailPendClick: (String) -> Unit,
-    onEditPendClick: (String) -> Unit
+    onEditPendClick: (String) -> Unit,
+    selectedCategory: String
 ) {
-    when (
-        homePendUiState) {
-        //Menampilkan gambar loading.
+    when (homePendUiState) {
         is HomePendUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
-        // Menampilkan daftar pendaftaran jika data berhasil diambil.
-        is HomePendUiState.Success ->
-            if (
-                homePendUiState.pendaftaran.isEmpty()){
-                return Box (modifier = modifier.
-                fillMaxSize(),
-                    contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada Data Pendaftaran" )
+        is HomePendUiState.Success -> {
+            val filteredPendaftaran = when (selectedCategory) {
+                "Saintek" -> homePendUiState.pendaftaran.filter { it.kategori == "Saintek" }
+                "Soshum" -> homePendUiState.pendaftaran.filter { it.kategori == "Soshum" }
+                else -> homePendUiState.pendaftaran // All
+            }
+
+            if (filteredPendaftaran.isEmpty()) {
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Tidak ada Data Pendaftaran")
                 }
-            }else {
+            } else {
                 PendLayout(
-                    pendaftaran = homePendUiState.pendaftaran,
+                    pendaftaran = filteredPendaftaran,
                     modifier = modifier.fillMaxWidth(),
                     onDetailPendClick = {
                         onDetailPendClick(it.id_pendaftaran)
@@ -187,8 +256,8 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data pendaftaran
                     onEditPendClick = { pendaftaran -> onEditPendClick(pendaftaran.id_pendaftaran) }
                 )
             }
+        }
 
-        // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
         is HomePendUiState.Error -> OnError(
             retryAction,
             modifier = modifier.fillMaxSize()
@@ -316,15 +385,19 @@ fun PendCard(
                 modifier = Modifier.weight(3f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Spacer(modifier = Modifier.height(1.dp))
+
                 // ID PENDAFTARAN
                 Text(
                     text = pendItem.id_pendaftaran,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.W500,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = FontFamily.SansSerif, // Menetapkan font sans-serif
+                        fontWeight = FontWeight.Bold
+                    ),
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(1.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 //NAMA SISWA relasi id_siswa
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -381,25 +454,6 @@ fun PendCard(
 
                 Spacer(modifier = Modifier.height(1.dp))
 
-                // KATEGORI
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "Kategori",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Text(
-                        text = "${pendItem.kategori}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(1.dp))
-
                 // STATUS PENDAFTARAN
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -425,8 +479,32 @@ fun PendCard(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(1.dp))
 
+                // KATEGORI
+                val imageResource = when (pendItem.kategori) {
+                    "Saintek" -> R.drawable.sigma // Gambar untuk kategori "saintek"
+                    "Soshum" -> R.drawable.book // Gambar untuk kategori "soshum"
+                    else -> R.drawable.failed // Gambar default jika kategori tidak sesuai
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = imageResource),
+                        contentDescription = "Kategori",
+                        modifier = Modifier
+                            .size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // Menambahkan jarak antara ikon dan teks
+                    Text(
+                        text = "${pendItem.kategori}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // button detail
                 OutlinedButton(
                     onClick = { onDetailPendClick(pendItem) },
                     modifier = Modifier
@@ -441,6 +519,7 @@ fun PendCard(
                     Text(text = "Detail")
                 }
 
+                // button edit
                 OutlinedButton(
                     onClick = { onEditPendClick(pendItem) },
                     modifier = Modifier
@@ -455,6 +534,7 @@ fun PendCard(
                     Text(text = "Edit")
                 }
 
+                // button hapus
                 OutlinedButton(
                     onClick = { onDeletePendClick(pendItem) },
                     modifier = Modifier
