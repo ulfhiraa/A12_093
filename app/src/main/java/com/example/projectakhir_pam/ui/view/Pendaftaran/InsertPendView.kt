@@ -138,22 +138,6 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
-//        // TEXTFIELD ID Pendaftaran
-//        OutlinedTextField(
-//            modifier = Modifier.fillMaxWidth(),
-//            value = insertPendUiEvent.id_pendaftaran,
-//            onValueChange = {
-//                onValueChange(insertPendUiEvent.copy(id_pendaftaran = it))
-//            },
-//            label = { Text("ID Pendaftaran") },
-//            isError = errorState.id_pendaftaran != null,
-//            placeholder = { Text("Masukkan ID Pendaftaran") },
-//        )
-//        Text(
-//            text = errorState.id_pendaftaran ?: "",
-//            color = Color.Red
-//        )
-
         // DROPDOWN ID SISWA (Display Nama Siswa)
         DropdownDataInt(
             selectedValue = insertPendUiEvent.id_siswa,
@@ -181,55 +165,6 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         )
         Text(
             text = errorState.id_kursus ?: "",  // Menampilkan pesan error jika ada
-            color = Color.Red
-        )
-
-
-//        // TEXTFIELD ID Siswa
-//        OutlinedTextField(
-//            modifier = Modifier.fillMaxWidth(),
-//            value = insertPendUiEvent.id_siswa,
-//            onValueChange = {
-//                onValueChange(insertPendUiEvent.copy(id_siswa = it))
-//            },
-//            label = { Text("ID Siswa") },
-//            isError = errorState.id_siswa != null,
-//            placeholder = { Text("Masukkan ID Siswa") },
-//        )
-//        Text(
-//            text = errorState.id_siswa ?: "",
-//            color = Color.Red
-//        )
-
-//        // TEXTFIELD ID Kursus
-//        OutlinedTextField(
-//            modifier = Modifier.fillMaxWidth(),
-//            value = insertPendUiEvent.id_kursus,
-//            onValueChange = {
-//                onValueChange(insertPendUiEvent.copy(id_kursus = it))
-//            },
-//            label = { Text("ID Kursus") },
-//            isError = errorState.id_kursus != null,
-//            placeholder = { Text("Masukkan ID Kursus") },
-//        )
-//        Text(
-//            text = errorState.id_kursus ?: "",
-//            color = Color.Red
-//        )
-
-        // TEXTFIELD Tgl Pendaftaran
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = insertPendUiEvent.tglDaftar,
-            onValueChange = {
-                onValueChange(insertPendUiEvent.copy(tglDaftar = it))
-            },
-            label = { Text("Tanggal dan waktu pendaftaran") },
-            isError = errorState.tglDaftar != null,
-            placeholder = { Text("Masukkan tanggal dan waktu pendaftaran") }
-        )
-        Text(
-            text = errorState.tglDaftar ?: "",
             color = Color.Red
         )
 
