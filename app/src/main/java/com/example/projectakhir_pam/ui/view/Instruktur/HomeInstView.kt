@@ -236,7 +236,7 @@ fun InstTabel(
                     .padding(vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TableInst(text = "ID", width = 35.dp, isHeader = true)
+                TableInst(text = "ID", width = 40.dp, isHeader = true)
                 TableInst(text = "Nama", width = 40.dp, isHeader = true)
                 TableInst(text = "Email", width = 50.dp, isHeader = true)
                 TableInst(text = "No.HP", width = 50.dp, isHeader = true)
@@ -260,7 +260,7 @@ fun InstTabel(
                     .padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TableInst(text = inst.id_instruktur.toString(), width = 35.dp)
+                TableInst(text = inst.id_instruktur.toString(), width = 40.dp)
                 TableInst(text = inst.namaInstruktur.take(4) + "...", width = 40.dp)
                 TableInst(text = inst.email.take(4) + "...", width = 50.dp)
                 TableInst(text = inst.noTelpInst.take(4) + "...", width = 50.dp)
