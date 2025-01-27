@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.data.Kategori
 import com.example.projectakhir_pam.data.KursusList
 import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.data.Status
@@ -129,6 +130,7 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
 ){
 
     var listStatus by remember { mutableStateOf("") } // menampilkan pilihan status
+    var listKategori by remember { mutableStateOf("") } // menampilkan pilihan kategori
 
     var chosenDropdown by remember { mutableStateOf("") }
 
@@ -163,6 +165,21 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         )
         Text(
             text = errorState.id_kursus ?: "",  // Menampilkan pesan error jika ada
+            color = Color.Red
+        )
+
+        // DROPDOWN KATEGORI
+        DropdownStatus(
+            selectedValue = insertPendUiEvent.kategori,
+            options = Kategori.listKategori,
+            label = "Pilih Kategori",
+            onValueChangeEvent = { selected ->
+                listKategori = selected
+                onValueChange(insertPendUiEvent.copy(kategori = selected))
+            }
+        )
+        Text(
+            text = errorState.kategori ?: "",  // Menampilkan pesan error jika ada
             color = Color.Red
         )
 
