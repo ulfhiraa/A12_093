@@ -3,11 +3,11 @@ package com.example.projectakhir_pam.ui.view.Kursus
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
@@ -32,6 +32,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.data.InstrukturList
+import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.model.Kursus
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
@@ -125,7 +127,13 @@ fun BodyDetailKur( // untuk menampilkan data detail kursus berdasarkan state UI
 fun ItemDetailKur( // untuk menampilkan informasi kursus dalam kartu
     modifier: Modifier = Modifier,
     kursus: Kursus,
+    viewModel: DetailKurViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
+    val kursus = viewModel.detailKurUiState.detailKurUiEvent
+
+    val instrukturList = InstrukturList.DataInstruktur()
+    val namaInstruktur = instrukturList.find { it.first == kursus.id_instruktur }?.second ?: "instruktur not found"
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -174,6 +182,13 @@ fun ItemDetailKur( // untuk menampilkan informasi kursus dalam kartu
                 judul = "Id Instruktur",
                 isinya = kursus.id_instruktur,
                 icon = Icons.Default.Person
+            )
+
+            Divider(modifier = Modifier.padding(vertical = 20.dp))
+            ComponentDetailKur(
+                judul = "Nama Instruktur",
+                isinya = namaInstruktur,
+                icon = Icons.Default.Face
             )
         }
     }
