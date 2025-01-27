@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.projectakhir_pam.ui.view.DestinasiHome
+import com.example.projectakhir_pam.ui.view.DestinasiStart
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiDetailInst
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiEntryInst
 import com.example.projectakhir_pam.ui.view.Instruktur.DestinasiHomeInst
@@ -43,6 +44,7 @@ import com.example.projectakhir_pam.ui.view.Siswa.DetailSisView
 import com.example.projectakhir_pam.ui.view.Siswa.HomeSisView
 import com.example.projectakhir_pam.ui.view.Siswa.InsertSisView
 import com.example.projectakhir_pam.ui.view.Siswa.UpdateSisView
+import com.example.projectakhir_pam.ui.view.StartHomeView
 
 // mengatur navigasi halaman
 
@@ -55,28 +57,43 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
 //        startDestination = DestinasiHomeInst.route,
 //        startDestination = DestinasiHomeKursus.route,
 //        startDestination = DestinasiHomePend.route,
-        startDestination = DestinasiHome.route,
+//        startDestination = DestinasiHome.route,
+        startDestination = DestinasiStart.route,
         modifier = Modifier,
     ) {
-        // MAIN HOME
-        composable(
-            route = DestinasiHome.route
-        ){
-            PilihanHomeView(
-                onKursusClick = {
-                    navController.navigate(DestinasiHomeKur.route)
-                },
-                onSiswaClick = {
-                    navController.navigate(DestinasiHomeSis.route)
-                },
-                onInstrukturClick = {
-                    navController.navigate(DestinasiHomeInst.route)
-                },
-                onPendaftaranClick = {
-                    navController.navigate(DestinasiHomePend.route)
+        // START HOME
+        composable(route = DestinasiStart.route){
+            StartHomeView(
+                onMulaiButton = {
+                    navController.navigate(DestinasiHome.route)
                 }
             )
-            SectionHeader()
+        }
+
+        // MAIN HOME
+        composable(DestinasiHome.route) {
+            PilihanHomeView(
+                onKursusClick = {
+                    navController.navigate(DestinasiHomeKur.route) // navigasi ke halaman kursus
+                },
+                onSiswaClick = {
+                    navController.navigate(DestinasiHomeSis.route) // navigasi ke halaman siswa
+                },
+                onInstrukturClick = {
+                    navController.navigate(DestinasiHomeInst.route) // navigasi ke halaman instruktur
+                },
+                onPendaftaranClick = {
+                    navController.navigate(DestinasiHomePend.route) // navigasi ke halaman pendaftaran
+                },
+                navigateBack = {
+                    // Menggunakan navigateBack untuk kembali ke halaman start
+                    navController.navigate(DestinasiStart.route) {
+                        // Menghapus halaman-halaman sebelumnya di back stack
+                        popUpTo(DestinasiStart.route) { inclusive = true }
+                    }
+                },
+                navController = navController // navController untuk navigasi antar halaman
+            )
         }
 
         // HOME SISWA
