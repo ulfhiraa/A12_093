@@ -61,6 +61,10 @@ import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.HomePendUiState
 import com.example.projectakhir_pam.ui.viewmodel.Pendaftaran.HomePendViewModel
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 /*
 Home view untuk menampilkan daftar pendaftaran dengan fitur CRUD, dan status UI (loading,success,error)
@@ -280,6 +284,21 @@ fun PendCard(
     onEditPendClick: (Pendaftaran) -> Unit,
     onDeletePendClick: (Pendaftaran) -> Unit
 ) {
+
+    // Format input (waktu UTC)
+    val isoDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    isoDateFormat.timeZone = TimeZone.getTimeZone("UTC") //  UTC sebagai zona waktu input
+
+    // Format output (menampilkan waktu WIB)
+    val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale("id", "ID"))
+    displayDateFormat.timeZone = TimeZone.getTimeZone("Asia/Jakarta") // Set ke WIB (Asia/Jakarta)
+
+    // Mengonversi waktu UTC ke Date
+    val utcDate = isoDateFormat.parse(pendItem.tglDaftar)
+
+    // Format menjadi waktu WIB
+    val formattedDate = utcDate?.let { displayDateFormat.format(it) } ?: pendItem.tglDaftar
+
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -352,7 +371,8 @@ fun PendCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp)) // Memperlebar jarak antara icon dan teks
                     Text(
-                        text = pendItem.tglDaftar, // Menampilkan tanggal waktu pendaftaran
+                        text = formattedDate, // Menampilkan tanggal waktu pendaftaran yang sudah diformat
+//                        text = pendItem.tglDaftar, // Menampilkan tanggal waktu pendaftaran
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
