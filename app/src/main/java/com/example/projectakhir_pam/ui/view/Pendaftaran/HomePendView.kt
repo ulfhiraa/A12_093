@@ -284,7 +284,7 @@ fun PendCard(
     onEditPendClick: (Pendaftaran) -> Unit,
     onDeletePendClick: (Pendaftaran) -> Unit
 ) {
-
+   // variabel untuk mengatur tampilan dan format waktu
     // Format input (waktu UTC)
     val isoDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
     isoDateFormat.timeZone = TimeZone.getTimeZone("UTC") //  UTC sebagai zona waktu input
