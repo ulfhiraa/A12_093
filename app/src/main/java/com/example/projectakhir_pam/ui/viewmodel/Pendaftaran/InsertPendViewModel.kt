@@ -25,7 +25,6 @@ class InsertPendViewModel(private val pend: PendaftaranRepository) : ViewModel()
         val errorState = FormErrorPendState(
             id_siswa = if (event.id_siswa.isNotEmpty()) null else "ID Siswa tidak boleh kosong",
             id_kursus = if (event.id_kursus.isNotEmpty()) null else "ID Kursus tidak boleh kosong",
-            tglDaftar = if (event.tglDaftar.isNotEmpty()) null else "Tanggal dan waktu pendaftaran tidak boleh kosong",
             status = if (event.status.isNotEmpty()) null else "Status pendaftaran tidak boleh kosong"
         )
         penduiState = penduiState.copy(isEntryValid = errorState)
@@ -54,12 +53,11 @@ data class InsertPendUiState(
 data class FormErrorPendState(
     val id_siswa: String? = null,
     val id_kursus: String? = null,
-    val tglDaftar: String? = null,
     val status: String? = null
 ) {
     fun isValid(): Boolean {
         return  id_siswa == null
-                && id_kursus == null && tglDaftar == null
+                && id_kursus == null
                 && status == null
     }
 }
@@ -69,7 +67,7 @@ data class InsertPendUiEvent(
     val id_pendaftaran: String = "",
     val id_siswa: String = "",
     val id_kursus: String = "",
-    val tglDaftar: String = "",
+    val tglDaftar: String = "", // Tetap menggunakan String untuk input tanggal
     val status: String = ""
 )
 
@@ -78,7 +76,7 @@ fun InsertPendUiEvent.toPend(): Pendaftaran = Pendaftaran(
     id_pendaftaran = id_pendaftaran,
     id_siswa = id_siswa,
     id_kursus = id_kursus,
-    tglDaftar = tglDaftar,
+    tglDaftar = tglDaftar, // Mengonversi String ke Date
     status = status
 )
 
