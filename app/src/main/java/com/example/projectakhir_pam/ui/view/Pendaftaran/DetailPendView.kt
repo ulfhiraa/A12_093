@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projectakhir_pam.data.KursusList
+import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.model.Pendaftaran
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
@@ -119,7 +121,26 @@ fun BodyDetailPend( // untuk menampilkan data detail pendaftaran berdasarkan sta
 fun ItemDetailPend( // untuk menampilkan informasi pendaftaran dalam card
     modifier: Modifier = Modifier,
     pendaftaran: Pendaftaran,
+    viewModel: DetailPendViewModel = viewModel(factory = PenyediaViewModel.Factory)
+
 ){
+    // mengambil informasi pendaftaran yang sedang diproses dari ViewModel
+    val pendaftaran = viewModel.detailPendUiState.detailPendUiEvent
+
+    val siswaList = SiswaList.DataSiswa() // mengambil data dari objek siswa
+    val kursusList = KursusList.DataKursus() // mengambil data dari objek kursus
+
+    // mencari nama siswa berdasarkan id_siswa
+    val namaSiswa = siswaList.find {
+        it.first == pendaftaran.id_siswa
+    }
+        ?.second ?: "siswa not found"
+
+    // mencari nama siswa berdasarkan id_kursus
+    val namaKursus = kursusList.find {
+        it.first == pendaftaran.id_kursus
+    }
+        ?.second ?: "kursus not found"
 
     // Format input (waktu UTC)
     val isoDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -150,7 +171,11 @@ fun ItemDetailPend( // untuk menampilkan informasi pendaftaran dalam card
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailPend(judul = "ID Siswa", isinya = pendaftaran.id_siswa)
             Spacer(modifier = Modifier.padding(4.dp))
+            ComponentDetailPend(judul = "Nama Siswa", isinya = namaSiswa)
+            Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailPend(judul = "ID Kursus", isinya = pendaftaran.id_kursus)
+            Spacer(modifier = Modifier.padding(4.dp))
+            ComponentDetailPend(judul = "Nama Kursus", isinya = namaKursus)
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailPend(judul = "Tanggal dan waktu pendaftaran", isinya = formattedDate)
             Spacer(modifier = Modifier.padding(4.dp))
