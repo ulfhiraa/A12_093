@@ -147,7 +147,7 @@ fun ItemDetailKur(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 4.dp)
             .shadow(15.dp),
         elevation = CardDefaults.cardElevation(12.dp),
         shape = RoundedCornerShape(10.dp)
