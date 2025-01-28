@@ -176,27 +176,28 @@ fun HomeKurView( // tampilan utama yang menampilkan daftar kursus
 
 @Composable
 fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
-    homeKurUiState: HomeKurUiState,
+    homeKurUiState: HomeKurUiState, // status data kursus
     retryAction: () -> Unit, // untuk mencoba lagi jika pengambilan data gagal
     modifier: Modifier = Modifier,
     onDeleteKurClick: (Kursus) -> Unit = {},
     onDetailKurClick: (String) -> Unit,
     onEditKurClick: (String) -> Unit,
-    searchQuery: String // Menambahkan searchQuery sebagai parameter
+    searchQuery: String // sebagai parameter pencarian filter berdasar id inst, nama kursus, kategori
 ) {
     when (homeKurUiState) {
         is HomeKurUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
         is HomeKurUiState.Success -> {
-            val filteredKursus = homeKurUiState.kursus.filter { // filter kursus berdasarkan
+            val filteredKursus = homeKurUiState.kursus.filter {
                 it.namaKursus.contains(searchQuery, ignoreCase = true) || // nama kursus
                         it.kategori.contains(searchQuery, ignoreCase = true) || // kategori
-                        it.id_instruktur.contains(searchQuery, ignoreCase = true) // ID Instruktur
+                        it.id_instruktur.contains(searchQuery, ignoreCase = true) // id instruktur
             }
+            //Fungsi contains digunakan untuk memeriksa kecocokan string secara case-insensitive (mengabaikan perbedaan huruf besar/kecil).
 
-            if (filteredKursus.isEmpty()) {// jika data yang dicari tidak ada atau data kosong
+            if (filteredKursus.isEmpty()) { //
                 Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada Data Kursus")
+                    Text(text = "Tidak ada Data Kursus") // kalau tidak ada yang cocok
                 }
             } else {
                 KurLayout(
@@ -212,7 +213,10 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
         }
 
         is HomeKurUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+
+//        else -> { /* State tidak dikenal */ }
     }
+
 }
 
 @Composable
