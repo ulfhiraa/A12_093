@@ -1,14 +1,27 @@
 package com.example.projectakhir_pam.ui.view.Siswa
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,7 +29,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -114,50 +130,114 @@ fun BodyDetailSis( // untuk menampilkan data detail siswa berdasarkan state UI
 fun ItemDetailSis( // untuk menampilkan informasi siswa dalam kartu
     modifier: Modifier = Modifier,
     siswa: Siswa,
-){
+) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(top = 20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
-    ){
-        Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 8.dp) // padding seperti di ItemDetailKur
+            .shadow(15.dp), // memberi shadow seperti pada ItemDetailKur
+        elevation = CardDefaults.cardElevation(12.dp), // memberikan elevation yang sama dengan ItemDetailKur
+        shape = RoundedCornerShape(10.dp) // shape yang sama dengan ItemDetailKur
+    ) {
+        Box(
             modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.surface
+                        )
+                    )
+                )
                 .padding(16.dp)
         ) {
-            ComponentDetailSis(judul = "Id Siswa", isinya = siswa.id_siswa)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailSis(judul = "Nama Siswa", isinya = siswa.namaSiswa)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailSis(judul = "Email", isinya = siswa.email)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailSis(judul = "Nomor Telepon", isinya = siswa.noTelpSiswa)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                ComponentDetailSis(
+                    judul = "ID Siswa",
+                    isinya = siswa.id_siswa,
+                    icon = Icons.Default.AccountBox,
+                    iconBackground = MaterialTheme.colorScheme.primaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailSis(
+                    judul = "Nama Siswa",
+                    isinya = siswa.namaSiswa,
+                    icon = Icons.Default.Face,
+                    iconBackground = MaterialTheme.colorScheme.secondaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailSis(
+                    judul = "Email",
+                    isinya = siswa.email,
+                    icon = Icons.Default.Email,
+                    iconBackground = MaterialTheme.colorScheme.tertiaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailSis(
+                    judul = "Nomor Telepon",
+                    isinya = siswa.noTelpSiswa,
+                    icon = Icons.Default.Phone,
+                    iconBackground = MaterialTheme.colorScheme.errorContainer
+                )
+            }
         }
     }
 }
 
 @Composable
-fun ComponentDetailSis( // untuk menampilkan judul dan isi data siswa
-    modifier: Modifier = Modifier,
-    judul:String,
-    isinya:String
-){
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
+fun ComponentDetailSis(
+    judul: String,
+    isinya: String,
+    icon: ImageVector,
+    iconBackground: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "$judul : ",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray
-        )
-        Text(
-            text = isinya,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .background(iconBackground, shape = CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = judul,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 1f)
+                )
+            )
+            Text(
+                text = isinya,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
     }
 }
