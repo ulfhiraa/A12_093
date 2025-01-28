@@ -47,7 +47,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -193,7 +192,7 @@ fun HomeStatus( // menampilkan UI sesuai dengan status data kursus
                         it.kategori.contains(searchQuery, ignoreCase = true) || // kategori
                         it.id_instruktur.contains(searchQuery, ignoreCase = true) // id instruktur
             }
-            //Fungsi contains digunakan untuk memeriksa kecocokan string secara case-insensitive (mengabaikan perbedaan huruf besar/kecil).
+            // Fungsi contains digunakan untuk memeriksa kecocokan string secara case-insensitive (mengabaikan perbedaan huruf besar/kecil).
 
             if (filteredKursus.isEmpty()) { //
                 Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
