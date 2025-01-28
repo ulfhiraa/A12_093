@@ -64,6 +64,7 @@ fun Pendaftaran.toDetailPendUiEvent(): InsertPendUiEvent {
         id_pendaftaran = id_pendaftaran,
         id_siswa = id_siswa,
         id_kursus = id_kursus,
-        tglDaftar = tglDaftar
+        tglDaftar = tglDaftar,
+        status = status
     )
 }
