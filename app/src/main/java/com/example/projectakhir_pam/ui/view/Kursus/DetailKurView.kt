@@ -1,12 +1,20 @@
 package com.example.projectakhir_pam.ui.view.Kursus
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
@@ -26,6 +34,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projectakhir_pam.data.InstrukturList
-import com.example.projectakhir_pam.data.SiswaList
 import com.example.projectakhir_pam.model.Kursus
 import com.example.projectakhir_pam.ui.customwidget.CustomeTopAppBar
 import com.example.projectakhir_pam.ui.navigasi.DestinasiNavigasi
@@ -124,7 +134,7 @@ fun BodyDetailKur( // untuk menampilkan data detail kursus berdasarkan state UI
 }
 
 @Composable
-fun ItemDetailKur( // untuk menampilkan informasi kursus dalam kartu
+fun ItemDetailKur(
     modifier: Modifier = Modifier,
     kursus: Kursus,
     viewModel: DetailKurViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -132,98 +142,142 @@ fun ItemDetailKur( // untuk menampilkan informasi kursus dalam kartu
     val kursus = viewModel.detailKurUiState.detailKurUiEvent
 
     val instrukturList = InstrukturList.DataInstruktur()
-    val namaInstruktur = instrukturList.find { it.first == kursus.id_instruktur }?.second ?: "instruktur not found"
+    val namaInstruktur = instrukturList.find { it.first == kursus.id_instruktur }?.second ?: "Instruktur not found"
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(14.dp),
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        )
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .shadow(15.dp),
+        elevation = CardDefaults.cardElevation(12.dp),
+        shape = RoundedCornerShape(10.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
+        Box(
+            modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.surface
+                        )
+                    )
+                )
+                .padding(16.dp)
         ) {
-            ComponentDetailKur(
-                judul = "Id Kursus",
-                isinya = kursus.id_kursus,
-                icon = Icons.Default.Info
-            )
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Nama Kursus",
-                isinya = kursus.namaKursus,
-                icon = Icons.Default.Star
-            )
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Deskripsi",
-                isinya = kursus.deskripsi,
-                icon = Icons.Default.Info
-            )
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Kategori",
-                isinya = kursus.kategori,
-                icon = Icons.Default.List
-            )
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Harga",
-                isinya = "Rp${kursus.harga}",
-                icon = Icons.Default.ShoppingCart
-            )
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Id Instruktur",
-                isinya = kursus.id_instruktur,
-                icon = Icons.Default.Person
-            )
-
-            Divider(modifier = Modifier.padding(vertical = 20.dp))
-            ComponentDetailKur(
-                judul = "Nama Instruktur",
-                isinya = namaInstruktur,
-                icon = Icons.Default.Face
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                ComponentDetailKur(
+                    judul = "ID Kursus",
+                    isinya = kursus.id_kursus,
+                    icon = Icons.Default.AccountBox,
+                    iconBackground = MaterialTheme.colorScheme.primaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "Nama Kursus",
+                    isinya = kursus.namaKursus,
+                    icon = Icons.Default.Star,
+                    iconBackground = MaterialTheme.colorScheme.secondaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "Deskripsi",
+                    isinya = kursus.deskripsi,
+                    icon = Icons.Default.Info,
+                    iconBackground = MaterialTheme.colorScheme.tertiaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "Kategori",
+                    isinya = kursus.kategori,
+                    icon = Icons.Default.List,
+                    iconBackground = MaterialTheme.colorScheme.errorContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "Harga",
+                    isinya = "Rp${kursus.harga}",
+                    icon = Icons.Default.ShoppingCart,
+                    iconBackground = MaterialTheme.colorScheme.primary
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "ID Instruktur",
+                    isinya = kursus.id_instruktur,
+                    icon = Icons.Default.Person,
+                    iconBackground = MaterialTheme.colorScheme.secondary
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailKur(
+                    judul = "Nama Instruktur",
+                    isinya = namaInstruktur,
+                    icon = Icons.Default.Face,
+                    iconBackground = MaterialTheme.colorScheme.tertiary
+                )
+            }
         }
     }
 }
 
 @Composable
-fun ComponentDetailKur( // untuk menampilkan judul dan isi data kursus
-    modifier: Modifier = Modifier,
+fun ComponentDetailKur(
     judul: String,
     isinya: String,
-    icon: ImageVector
+    icon: ImageVector,
+    iconBackground: Color
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+        Box(
             modifier = Modifier
-                .size(35.dp)
-                .padding(end = 10.dp)
-        )
+                .size(20.dp)
+                .background(iconBackground, shape = CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
                 text = judul,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 1f)
                 )
             )
             Text(
                 text = isinya,
                 style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             )
