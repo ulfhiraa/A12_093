@@ -1,14 +1,29 @@
 package com.example.projectakhir_pam.ui.view.Pendaftaran
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,7 +31,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -118,91 +136,172 @@ fun BodyDetailPend( // untuk menampilkan data detail pendaftaran berdasarkan sta
 }
 
 @Composable
-fun ItemDetailPend( // untuk menampilkan informasi pendaftaran dalam card
+fun ItemDetailPend(
     modifier: Modifier = Modifier,
     pendaftaran: Pendaftaran,
     viewModel: DetailPendViewModel = viewModel(factory = PenyediaViewModel.Factory)
-
-){
-    // mengambil informasi pendaftaran yang sedang diproses dari ViewModel
+) {
+    // Mengambil informasi pendaftaran yang sedang diproses dari ViewModel
     val pendaftaran = viewModel.detailPendUiState.detailPendUiEvent
 
-    val siswaList = SiswaList.DataSiswa() // mengambil data dari objek siswa
-    val kursusList = KursusList.DataKursus() // mengambil data dari objek kursus
+    // Mengambil data siswa dan kursus dari list yang sudah ada
+    val siswaList = SiswaList.DataSiswa() // Daftar siswa
+    val kursusList = KursusList.DataKursus() // Daftar kursus
 
-    // mencari nama siswa berdasarkan id_siswa
+    // Mencari nama siswa berdasarkan id_siswa yang ada dalam data pendaftaran
     val namaSiswa = siswaList.find {
         it.first == pendaftaran.id_siswa
     }
-        ?.second ?: "siswa not found"
+        ?.second ?: "siswa not found" // Jika tidak ditemukan, tampilkan "siswa not found"
 
-    // mencari nama siswa berdasarkan id_kursus
+    // Mencari nama kursus berdasarkan id_kursus yang ada dalam data pendaftaran
     val namaKursus = kursusList.find {
         it.first == pendaftaran.id_kursus
     }
-        ?.second ?: "kursus not found"
+        ?.second ?: "kursus not found" // Jika tidak ditemukan, tampilkan "kursus not found"
 
-    // Format input (waktu UTC)
+    // Format input (waktu UTC) yang diambil dari pendaftaran
     val isoDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-    isoDateFormat.timeZone = TimeZone.getTimeZone("UTC") // Pastikan UTC sebagai zona waktu input
+    isoDateFormat.timeZone = TimeZone.getTimeZone("UTC") // Set zona waktu input ke UTC
 
-    // Format output (menampilkan waktu WIB)
+    // Format output untuk menampilkan waktu dalam format WIB
     val displayDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale("id", "ID"))
-    displayDateFormat.timeZone = TimeZone.getTimeZone("Asia/Jakarta") // Set ke WIB (Asia/Jakarta)
+    displayDateFormat.timeZone = TimeZone.getTimeZone("Asia/Jakarta") // Set zona waktu ke WIB (Asia/Jakarta)
 
-    // Mengonversi waktu UTC ke Date
+    // Mengonversi waktu UTC yang diambil dari pendaftaran ke dalam objek Date
     val utcDate = isoDateFormat.parse(pendaftaran.tglDaftar)
 
-    // Format menjadi waktu WIB
+    // Mengubah waktu UTC menjadi waktu WIB sesuai format yang telah ditentukan
     val formattedDate = utcDate?.let { displayDateFormat.format(it) } ?: pendaftaran.tglDaftar
 
     Card(
-        modifier = modifier.fillMaxWidth().padding(top = 20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
-    ){
-        Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .shadow(15.dp),
+        elevation = CardDefaults.cardElevation(12.dp),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Box(
             modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            MaterialTheme.colorScheme.surface
+                        )
+                    )
+                )
                 .padding(16.dp)
         ) {
-            ComponentDetailPend(judul = "ID Pendaftaran", isinya = pendaftaran.id_pendaftaran)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "ID Siswa", isinya = pendaftaran.id_siswa)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "Nama Siswa", isinya = namaSiswa)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "ID Kursus", isinya = pendaftaran.id_kursus)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "Nama Kursus", isinya = namaKursus)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPend(judul = "Tanggal dan waktu pendaftaran", isinya = formattedDate)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                // Menampilkan komponen detail untuk setiap informasi pendaftaran
+                ComponentDetailPend(
+                    judul = "ID Pendaftaran",
+                    isinya = pendaftaran.id_pendaftaran,
+                    icon = Icons.Default.AccountBox,
+                    iconBackground = MaterialTheme.colorScheme.primaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "ID Siswa",
+                    isinya = pendaftaran.id_siswa,
+                    icon = Icons.Default.Person,
+                    iconBackground = MaterialTheme.colorScheme.secondaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "Nama Siswa",
+                    isinya = namaSiswa,
+                    icon = Icons.Default.Face,
+                    iconBackground = MaterialTheme.colorScheme.tertiaryContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "ID Kursus",
+                    isinya = pendaftaran.id_kursus,
+                    icon = Icons.Default.List,
+                    iconBackground = MaterialTheme.colorScheme.errorContainer
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "Nama Kursus",
+                    isinya = namaKursus,
+                    icon = Icons.Default.Star,
+                    iconBackground = MaterialTheme.colorScheme.primary
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "Tanggal dan waktu pendaftaran",
+                    isinya = formattedDate,
+                    icon = Icons.Default.DateRange,
+                    iconBackground = MaterialTheme.colorScheme.secondary
+                )
+            }
         }
     }
 }
 
 @Composable
-fun ComponentDetailPend( // untuk menampilkan judul dan isi data pendaftaran
-    modifier: Modifier = Modifier,
-    judul:String,
-    isinya:String
-){
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
+fun ComponentDetailPend(
+    judul: String,
+    isinya: String,
+    icon: ImageVector,
+    iconBackground: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "$judul : ",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Gray
-        )
-        Text(
-            text = isinya,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .background(iconBackground),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = judul,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 1f)
+                )
+            )
+            Text(
+                text = isinya,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
     }
 }
