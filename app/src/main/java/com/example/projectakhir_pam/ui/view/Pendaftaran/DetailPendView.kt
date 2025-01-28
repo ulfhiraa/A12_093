@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.List
@@ -177,7 +178,7 @@ fun ItemDetailPend(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp)
             .shadow(15.dp),
         elevation = CardDefaults.cardElevation(12.dp),
         shape = RoundedCornerShape(10.dp)
@@ -254,6 +255,16 @@ fun ItemDetailPend(
                     judul = "Tanggal dan waktu pendaftaran",
                     isinya = formattedDate,
                     icon = Icons.Default.DateRange,
+                    iconBackground = MaterialTheme.colorScheme.secondary
+                )
+                Divider(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                )
+                ComponentDetailPend(
+                    judul = "Status pendaftaran",
+                    isinya = pendaftaran.status,
+                    icon = Icons.Default.Check,
                     iconBackground = MaterialTheme.colorScheme.secondary
                 )
             }
