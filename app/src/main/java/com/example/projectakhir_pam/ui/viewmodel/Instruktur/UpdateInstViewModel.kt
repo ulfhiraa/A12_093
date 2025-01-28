@@ -17,11 +17,13 @@ class UpdateInstViewModel(savedStateHandle: SavedStateHandle,
                          private val instrukturRepository: InstrukturRepository
 ): ViewModel()
 {
+    // Menyimpan data instruktur yang sedang diperbarui
     var updateInstUiState by mutableStateOf(InsertInstUiState())
         private set
 
     private val _id_instruktur: String = checkNotNull(savedStateHandle[DestinasiUpdateInst.id_instruktur])
 
+    // Mengambil data instruktur berdasarkan ID dan mengubahnya untuk ditampilkan di UI
     init {
         viewModelScope.launch {
             updateInstUiState = instrukturRepository.getInstrukturById(_id_instruktur)
@@ -29,10 +31,12 @@ class UpdateInstViewModel(savedStateHandle: SavedStateHandle,
         }
     }
 
+    // Mengubah status UI berdasarkan input yang diterima dari form
     fun updateInsertInstState(insertUiEvent: InsertInstUiEvent){
         updateInstUiState = InsertInstUiState(insertInstUiEvent = insertUiEvent)
     }
 
+    // Menyimpan perubahan instruktur ke repository ( database atau server)
     fun updateInst(){
         viewModelScope.launch {
             try {

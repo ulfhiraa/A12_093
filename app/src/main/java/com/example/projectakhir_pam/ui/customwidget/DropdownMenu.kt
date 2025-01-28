@@ -88,7 +88,7 @@ fun DropdownData(
             },
             colors = OutlinedTextFieldDefaults.colors(),
             modifier = Modifier
-                .menuAnchor() // This anchors the dropdown to the OutlinedTextField
+                .menuAnchor()
                 .fillMaxWidth()
         )
 

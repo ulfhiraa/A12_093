@@ -6,11 +6,10 @@ import kotlinx.serialization.Serializable
 // model untuk mendefinisikan informasi entitas dan atribut
 
 @Serializable
-data class Instruktur(
-//    @SerialName("id_instruktur")
+data class Instruktur( //  untuk menyimpan data instruktur
     val id_instruktur: String,
 
-    @SerialName("nama_instruktur")
+    @SerialName("nama_instruktur") // pengenalan nama atribut di database (alias)
     val namaInstruktur: String,
     val email: String,
 
@@ -19,25 +18,19 @@ data class Instruktur(
     val deskripsi: String
 )
 
-
-// untuk membungkus respons JSON yang diterima dari API saat mengakses daftar instruktur.
-// Respons ini memiliki status, pesan, dan data berupa list dari objek Instruktur.
-
 // ADD - response JSON (untuk merespons daftar instruktur dari API )
 @Serializable
 data class InstrukturResponse(
-    val status: Boolean,
-    val message: String,
-    val data: List<Instruktur>
+    val status: Boolean, // Menyimpan status dari respons API, misalnya true jika berhasil dan false jika gagal.
+    val message: String, // Menyimpan pesan terkait status respons, bisa berupa pesan keberhasilan atau error.
+    val data: List<Instruktur> // Ini berisi data dari API yang diubah menjadi objek-objek Instruktur
 )
-
-// untuk membungkus respons JSON yang diterima dari API saat mengakses detail informasi dari satu instruktur.
-// Respons ini memiliki status, pesan, dan data yang berisi objek Instruktur yang spesifik.
 
 // untuk merespons detail dari satu instruktur
 @Serializable
 data class InstrukturResponseDetail(
+//  digunakan ketika API hanya mengirimkan informasi tentang satu instruktur
     val status: Boolean,
-    val message: String,
+    val message: String, // Menyimpan pesan terkait status respons.
     val data: Instruktur
 )

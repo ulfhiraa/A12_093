@@ -37,47 +37,48 @@ import kotlinx.coroutines.launch
 // untuk mendefinisikan rute navigasi ke layar 'Tambah Instruktur'
 object DestinasiEntryInst : DestinasiNavigasi {
     override val route = "tambahInst"
-    override val titleRes = "Tambah Instruktur"
+    override val titleRes = "Tambah Instruktur" // judul halaman
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InsertInstView( //  untuk menambahkan data instruktur dengan form input, navigasi kembali, dan tombol simpan
-    navigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: InsertInstViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
-    val coroutineScope = rememberCoroutineScope()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+fun InsertInstView( // Fungsi untuk tampilan halaman input data instruktur
+    navigateBack: () -> Unit, // Fungsi untuk kembali ke halaman sebelumnya
+    modifier: Modifier = Modifier, // Modifier untuk mengubah tampilan komponen
+    viewModel: InsertInstViewModel = viewModel(factory = PenyediaViewModel.Factory) // Menggunakan ViewModel untuk mengelola data
+) {
+    val coroutineScope = rememberCoroutineScope() // Membuat scope untuk menjalankan operasi asinkron (seperti validasi dan menyimpan data)
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior() // Mengatur perilaku scroll untuk top app bar
 
+    // mengatur layout topbar dan body
     Scaffold(
-        modifier = modifier.
-        nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), // Menambahkan scroll behavior ke layout
         topBar = {
+            // Menambahkan AppBar di bagian atas halaman dengan judul dan tombol kembali
             CustomeTopAppBar(
-                title = DestinasiEntryInst.titleRes,
-                canNavigateBack = true,
-                scrollBehavior = scrollBehavior,
-                navigateUp = navigateBack
+                title = DestinasiEntryInst.titleRes, // Judul untuk halaman
+                canNavigateBack = true, // Mengaktifkan tombol kembali
+                scrollBehavior = scrollBehavior, // Menggunakan scroll behavior agar AppBar bisa menghilang saat scroll
+                navigateUp = navigateBack // Menentukan fungsi yang dijalankan saat tombol kembali ditekan
             )
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
+        // Bagian Body halaman untuk menampilkan form input
         EntryBody(
-            insertInstUiState = viewModel.instuiState,
-            onInstValueChange = viewModel::updateInsertInstState,
-            onSaveClick = {
-                coroutineScope.
-                launch {
-                    if (viewModel.validateFields()) {
-                        viewModel.insertInst()
-                        navigateBack()
+            insertInstUiState = viewModel.instuiState, // Menyediakan state untuk menampilkan UI berdasarkan status data
+            onInstValueChange = viewModel::updateInsertInstState, // Fungsi untuk mengupdate data instruktur saat ada perubahan input
+            onSaveClick = { // Fungsi yang dijalankan saat tombol simpan ditekan
+                coroutineScope.launch { // Menjalankan proses asinkron
+                    if (viewModel.validateFields()) { // Memvalidasi form input
+                        viewModel.insertInst() // Jika valid, data disimpan
+                        navigateBack() // Kembali ke halaman sebelumnya
                     }
                 }
             },
             modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .fillMaxWidth()
+                .padding(innerPadding) // Menambahkan padding agar form tidak tertutup oleh elemen lain
+                .verticalScroll(rememberScrollState()) // Membuat form bisa digulirkan secara vertikal
+                .fillMaxWidth() // Membuat form memanfaatkan seluruh lebar layar
         )
     }
 }
@@ -96,14 +97,13 @@ fun EntryBody( // untuk mengatur tata letak dan logika formulir input data instr
             .padding(12.dp)
     ) {
         FormInput(
-            insertInstUiEvent = insertInstUiState.insertInstUiEvent,
-            onValueChange = onInstValueChange,
-            errorState = insertInstUiState.isEntryValid,
-            modifier = Modifier
-                .fillMaxWidth()
+            insertInstUiEvent = insertInstUiState.insertInstUiEvent, // Input data instruktur
+            onValueChange = onInstValueChange, // Menghandle perubahan data input
+            errorState = insertInstUiState.isEntryValid, // Validasi form
+            modifier = Modifier.fillMaxWidth() // Membuat lebar penuh untuk input
         )
         Button(
-            onClick = onSaveClick,
+            onClick = onSaveClick, // menyimpan data instruktur
             shape = MaterialTheme.shapes.small,
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,22 +125,6 @@ fun FormInput( // untuk menampilkan elemen input form dengan validasi
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
-        // TEXTFIELD ID Instruktur
-//        OutlinedTextField(
-//            modifier = Modifier.fillMaxWidth(),
-//            value = insertInstUiEvent.id_instruktur,
-//            onValueChange = {
-//                onValueChange(insertInstUiEvent.copy(id_instruktur = it))
-//            },
-//            label = { Text("ID Instruktur") },
-//            isError = errorState.id_instruktur != null,
-//            placeholder = { Text("Masukkan ID Instruktur") },
-//        )
-//        Text(
-//            text = errorState.id_instruktur ?: "",
-//            color = Color.Red
-//        )
-
         // TEXTFIELD Nama Instruktur
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),

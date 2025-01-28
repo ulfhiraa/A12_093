@@ -41,23 +41,23 @@ class HomeKurViewModel(private val kur: KursusRepository) : ViewModel() {
     }
 
     // Menambahkan fungsi untuk pencarian kursus
-    fun searchKur(nama_kursus: String?, kategori: String?, id_instruktur: String?) {
-        viewModelScope.launch {
-            kurUIState = HomeKurUiState.Loading
-            try {
-                val response = kur.searchKursus(nama_kursus, kategori, id_instruktur)
-                if (response.data.isNotEmpty()) {
-                    kurUIState = HomeKurUiState.Success(response.data)
-                } else {
-                    kurUIState = HomeKurUiState.Error
-                }
-            } catch (e: IOException) {
-                kurUIState = HomeKurUiState.Error
-            } catch (e: HttpException) {
-                kurUIState = HomeKurUiState.Error
-            }
-        }
-    }
+//    fun searchKur(nama_kursus: String?, kategori: String?, id_instruktur: String?) {
+//        viewModelScope.launch {
+//            kurUIState = HomeKurUiState.Loading
+//            try {
+//                val response = kur.searchKursus(nama_kursus, kategori, id_instruktur)
+//                if (response.data.isNotEmpty()) {
+//                    kurUIState = HomeKurUiState.Success(response.data)
+//                } else {
+//                    kurUIState = HomeKurUiState.Error
+//                }
+//            } catch (e: IOException) {
+//                kurUIState = HomeKurUiState.Error
+//            } catch (e: HttpException) {
+//                kurUIState = HomeKurUiState.Error
+//            }
+//        }
+//    }
 
     //untuk menghapus data kursus berdasarkan ID yang diberikan
     fun deleteKur(id_kursus: String) {

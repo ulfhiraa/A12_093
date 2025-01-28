@@ -73,7 +73,8 @@ data class InsertInstUiEvent(
     val deskripsi: String = ""
 )
 
-// konversi dari event input pengguna (InsertUiEvent) menjadi entitas instruktur (Instruktur)
+//  untuk mengubah data yang dimasukkan oleh pengguna di form
+//  menjadi objek instruktur yang bisa disimpan atau diproses lebih lanjut dalam aplikasi.
 fun InsertInstUiEvent.toInst(): Instruktur = Instruktur(
     id_instruktur = id_instruktur,
     namaInstruktur = namaInstruktur,
@@ -82,12 +83,12 @@ fun InsertInstUiEvent.toInst(): Instruktur = Instruktur(
     deskripsi = deskripsi
 )
 
-//  konversi dari entitas instruktur (Instruktur) menjadi status UI (InsertUiState)
+//  untuk menampilkan data yang sudah ada di form edit
 fun Instruktur.toUiStateInst(): InsertInstUiState = InsertInstUiState(
     insertInstUiEvent = toInsertUiEvent()
 )
 
-// konversi dari entitas instruktur (Instruktur) menjadi event input pengguna (InsertUiEvent)
+//  untuk mengubah objek instruktur menjadi data yang bisa diubah di form pengguna
 fun Instruktur.toInsertUiEvent(): InsertInstUiEvent = InsertInstUiEvent(
     id_instruktur = id_instruktur,
     namaInstruktur = namaInstruktur,

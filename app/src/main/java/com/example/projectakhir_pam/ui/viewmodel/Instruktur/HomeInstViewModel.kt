@@ -14,9 +14,9 @@ import java.io.IOException
 // HomeViewModel : mengelola data dan status tampilan (UI) terkait data instruktur
 
 sealed class HomeInstUiState {
-    data class Success(val instruktur: List<Instruktur>) : HomeInstUiState()
-    object Error : HomeInstUiState()
-    object Loading : HomeInstUiState()
+    data class Success(val instruktur: List<Instruktur>) : HomeInstUiState() // Menyimpan daftar instruktur jika berhasil
+    object Error : HomeInstUiState() // Status error
+    object Loading : HomeInstUiState() // Status loading saat data sedang dimuat
 }
 
 class HomeInstViewModel(private val inst: InstrukturRepository) : ViewModel() {
@@ -27,28 +27,29 @@ class HomeInstViewModel(private val inst: InstrukturRepository) : ViewModel() {
         getInst() // untuk mengambil daftar instruktur dari repository (InstrukturRepository)
     }
 
+    // Fungsi untuk mengambil data instruktur
     fun getInst() {
         viewModelScope.launch {
-            instUIState = HomeInstUiState.Loading
+            instUIState = HomeInstUiState.Loading // Menetapkan status ke loading saat mengambil data
             instUIState = try {
-                HomeInstUiState.Success(inst.getInstruktur().data)
+                HomeInstUiState.Success(inst.getInstruktur().data) // Menyimpan data instruktur jika berhasil
             } catch (e: IOException) {
-                HomeInstUiState.Error
+                HomeInstUiState.Error // Menyimpan status error jika terjadi IOException
             } catch (e: HttpException) {
-                HomeInstUiState.Error
+                HomeInstUiState.Error // Menyimpan status error jika terjadi HttpException
             }
         }
     }
 
-    //untuk menghapus data instruktur berdasarkan ID yang diberikan
+    // Fungsi untuk menghapus data instruktur berdasarkan ID
     fun deleteInst(id_instruktur: String) {
         viewModelScope.launch {
             try {
-                inst.deleteInstruktur(id_instruktur)
+                inst.deleteInstruktur(id_instruktur) // Memanggil fungsi untuk menghapus instruktur dari repository
             } catch (e: IOException){
-                HomeInstUiState.Error
+                HomeInstUiState.Error // Menyimpan status error jika terjadi IOException
             } catch (e: HttpException){
-                HomeInstUiState.Error
+                HomeInstUiState.Error // Menyimpan status error jika terjadi HttpException
             }
         }
     }

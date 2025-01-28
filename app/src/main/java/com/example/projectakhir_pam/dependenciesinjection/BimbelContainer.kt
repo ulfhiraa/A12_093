@@ -27,14 +27,15 @@ interface CourseContainer{
     val pendaftaranRepository: PendaftaranRepository // pendaftaran
 }
 
-// untuk menyediakan
+// untuk menyediakan akses ke API
 class BimbelContainer : CourseContainer{
     private val baseUrlSiswa = "http://10.0.2.2:3000/api/siswa/" // url data siswa
     private val baseUrlInst = "http://10.0.2.2:3000/api/instruktur/" // url data instruktur
     private val baseUrlPend = "http://10.0.2.2:3000/api/pendaftaran/" // url data pendaftaran
     private val baseUrlKursus = "http://10.0.2.2:3000/api/kursus/" // url data kursus
 
-    private val json = Json { ignoreUnknownKeys = true } //  mengatur format data JSON.
+    // Mendeklarasikan pengaturan format data JSON
+    private val json = Json { ignoreUnknownKeys = true } // Mengatur agar format JSON bisa menerima data yang tidak dikenali
 
     //menggunakan Retrofit (sebuah pustaka untuk memudahkan komunikasi dengan API)
     // untuk membuat repositori yang mengelola data siswa dari API.
@@ -70,17 +71,17 @@ class BimbelContainer : CourseContainer{
         siswaRetrofit.create(SiswaService::class.java)
     }
 
-    // inisialisasi INSTRUKTUR SERVICE
+    // inisialisasi INSTRUKTUR SERVICE untuk mengakses API Instruktur
     private val instrukturService: InstrukturService by lazy {
         instrukturRetrofit.create(InstrukturService::class.java)
     }
 
-    // inisialisasi KURSUS SERVICE
+    // inisialisasi KURSUS SERVICE untuk mengakses API Kursus
     private val kursusService: KursusService by lazy {
         kursusRetrofit.create(KursusService::class.java)
     }
 
-    // inisialisasi PENDAFTARAN SERVICE
+    // inisialisasi PENDAFTARAN SERVICE untuk mengakses API Pendaftaran
     private val pendaftaranService: PendaftaranService by lazy {
         pendaftaranRetrofit.create(PendaftaranService::class.java)
     }
@@ -105,4 +106,7 @@ class BimbelContainer : CourseContainer{
     override val pendaftaranRepository: PendaftaranRepository by lazy {
         NetworkPendaftaranRepository(pendaftaranService)
     }
+
+    // by lazy untuk menunda pembuatan atau inisialisasi sebuah objek sampai objek tersebut benar-benar diperlukan.
+
 }

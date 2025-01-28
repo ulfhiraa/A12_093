@@ -15,25 +15,29 @@ import retrofit2.http.Path
 // untuk  mendefinisikan API endpoints yang berhubungan dengan operasi instruktur.
 
 interface InstrukturService {
+
+    // Menambahkan headers untuk setiap permintaan HTTP.
+    // Headers ini memberitahu server tentang format data yang diharapkan.
+
     @Headers(
-        "Accept: application/json",
-        "Content-Type: application/json"
+        "Accept: application/json",  // Mengharapkan respons dalam format JSON.
+        "Content-Type: application/json"  // Mengirim data dalam format JSON.
     )
 
     // hubungkan dengan file .js
 
-    @GET(".")
+    @GET(".") // mengambil seluruh data instruktur
     suspend fun  getInstruktur(): InstrukturResponse
 
-    @GET("{id_instruktur}")
+    @GET("{id_instruktur}") // mengambil satu data
     suspend fun  getInstrukturById(@Path("id_instruktur") id_instruktur: String): InstrukturResponseDetail
 
-    @POST("store")
+    @POST("store") // menambah data
     suspend fun insertInstruktur(@Body instruktur: Instruktur)
 
-    @PUT("{id_instruktur}")
+    @PUT("{id_instruktur}") // mengubah data
     suspend fun updateInstruktur(@Path("id_instruktur") id_instruktur: String, @Body instruktur: Instruktur)
 
-    @DELETE("{id_instruktur}")
+    @DELETE("{id_instruktur}") // menghapus data
     suspend fun deleteInstruktur(@Path("id_instruktur") id_instruktur: String): Response<Void>
 }

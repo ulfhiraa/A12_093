@@ -24,42 +24,43 @@ object DestinasiUpdateInst: DestinasiNavigasi {
     const val id_instruktur = "id_instruktur"
     val routeWithArgs = "$route/{$id_instruktur}"
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateInstView( // untuk memperbarui data instruktur dengan navigasi kembali
-    navigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
+fun UpdateInstView( // Fungsi untuk menampilkan tampilan pembaruan data instruktur
+    navigateBack: () -> Unit, // Fungsi untuk menavigasi kembali
+    onNavigateUp: () -> Unit, // Fungsi untuk mengarahkan ke tampilan sebelumnya setelah update
     modifier: Modifier = Modifier,
-    updateViewModel: UpdateInstViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    updateViewModel: UpdateInstViewModel = viewModel(factory = PenyediaViewModel.Factory) //  ViewModel untuk mengelola data
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior() // Menentukan  scroll pada app bar
 
-    Scaffold(
+    Scaffold( // Menyusun tampilan dasar
         topBar = {
-            CustomeTopAppBar(
+            CustomeTopAppBar( // Menampilkan app bar dengan judul "Update Instruktur"
                 title = "Update Instruktur",
-                canNavigateBack = true,
-                scrollBehavior = scrollBehavior,
-                navigateUp = navigateBack
+                canNavigateBack = true, // Tombol untuk navigasi kembali
+                scrollBehavior = scrollBehavior, // Mengatur perilaku scroll
+                navigateUp = navigateBack // navigasi kembali
             )
         },
         modifier = modifier
     ) { innerPadding ->
-        EntryBody(
-            insertInstUiState = updateViewModel.updateInstUiState,
-            onInstValueChange = updateViewModel::updateInsertInstState,
+        // inner padding membantu menciptakan ruang di dalam Scaffold agar konten tampak lebih teratur dan tidak terlalu dekat dengan batas tampilan.
+
+        EntryBody( // Menampilkan form input untuk memperbarui data instruktur
+            insertInstUiState = updateViewModel.updateInstUiState, // State yang menyimpan data instruktur
+            onInstValueChange = updateViewModel::updateInsertInstState, // Fungsi untuk mengubah data instruktur
             onSaveClick = {
-                coroutineScope.launch {
-                    updateViewModel.updateInst()
-                    onNavigateUp()
+                coroutineScope.launch { // Menjalankan operasi update data secara asinkron
+                    updateViewModel.updateInst() // Mengupdate data instruktur
+                    onNavigateUp() // Navigasi kembali setelah data berhasil diupdate
                 }
             },
             modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+                .padding(innerPadding) // Memberikan padding untuk konten
+                .verticalScroll(rememberScrollState()) // Mengizinkan scroll vertikal pada form
         )
     }
 }

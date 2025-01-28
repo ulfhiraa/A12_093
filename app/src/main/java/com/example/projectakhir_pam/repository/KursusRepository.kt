@@ -8,7 +8,7 @@ import java.io.IOException
 
 // repository : sebagai perantara antara aplikasi dan penyimpanan data
 
-// mendefinisikan operasi CRUD
+// mendefinisikan operasi operasi CRUD
 interface KursusRepository {
     // mengambil data seluruh kursus
     suspend fun getKursus(): KursusResponse
@@ -73,3 +73,7 @@ class NetworkKursusRepository(
         }
     }
 }
+
+// override:  untuk mengganti implementasi fungsi dari interface atau kelas induk
+// dengan fungsi yang dapat berjalan secara asinkron (seperti mengambil data dari API
+// atau melakukan operasi lain yang memerlukan waktu

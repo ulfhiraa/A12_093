@@ -6,21 +6,35 @@ import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurUiState
 import com.example.projectakhir_pam.ui.viewmodel.Kursus.HomeKurViewModel
 import com.example.projectakhir_pam.ui.viewmodel.PenyediaViewModel
 
-//  untuk mengambil data kursus dari ViewModel
+// Objek KursusList ini bertugas untuk mengambil dan mengelola data kursus
 object KursusList {
+
+    // Fungsi DataKursus ini digunakan untuk mengambil data kursus dari ViewModel
+    // Fungsi ini diberi anotasi @Composable karena digunakan untuk menghasilkan tampilan UI
     @Composable
     fun DataKursus(
+        // Parameter homeKurViewModel digunakan untuk mengambil data kursus melalui ViewModel
+        // ViewModel ini dikelola menggunakan factory yang disediakan oleh PenyediaViewModel
         homeKurViewModel: HomeKurViewModel = viewModel(factory = PenyediaViewModel.Factory)
-    ): List<Pair<String, String>> {
-        // Observasi state dari HomeKurViewModel
+    ): List<Pair<String, String>> { // Fungsi ini mengembalikan data dalam bentuk List pasangan (Pair)
+
+        // Mengambil status data kursus dari ViewModel
         val kurUiState = homeKurViewModel.kurUIState
 
-        // Jika state sukses, peta data instruktur menjadi list nama
+        // Mengecek status dari data kursus yang diambil
         return when (kurUiState) {
+
+            // Jika statusnya sukses (data kursus berhasil diambil)
             is HomeKurUiState.Success -> {
-                kurUiState.kursus.map { it.id_kursus to it.namaKursus }
+                // Mengubah data kursus menjadi list pasangan (Pair) ID kursus dan nama kursus
+                // Menggunakan 'map' untuk memetakan setiap kursus menjadi pair (ID kursus, Nama kursus)
+                kurUiState.kursus.map {
+                    it.id_kursus to it.namaKursus // Pasangan ID dan Nama kursus
+                }
             }
-            else -> emptyList() // Return list kosong jika dalam kondisi lain (Loading/Error)
+
+            // Jika statusnya bukan sukses (misalnya sedang loading atau error), kembalikan list kosong
+            else -> emptyList()
         }
     }
 }

@@ -61,56 +61,71 @@ object DestinasiHomeInst : DestinasiNavigasi {
     override val titleRes = "Home Instruktur" // judul yang akan ditampilkan di halaman
 }
 
+// Menandai fungsi ini menggunakan API eksperimental Material3 untuk komponen UI
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeInstView(
+    // Fungsi yang digunakan untuk navigasi ke halaman entri instruktur baru
     navigateToItemEntry: () -> Unit,
+    // Fungsi untuk kembali ke halaman sebelumnya
     navigateBack: () -> Unit,
+    // Modifier untuk menyesuaikan tampilan
     modifier: Modifier = Modifier,
+    // Fungsi untuk menampilkan detail instruktur ketika diklik
     onDetailInstClick: (String) -> Unit = {},
+    // Fungsi untuk mengedit instruktur ketika diklik
     onEditInstClick: (String) -> Unit = {},
+    // ViewModel yang digunakan untuk mengelola data dan status UI instruktur
     viewModel: HomeInstViewModel = viewModel(factory = PenyediaViewModel.Factory)
-){
+) {
+    // Menyiapkan behavior scroll untuk top app bar (misalnya saat scroll layar)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    // Scaffold adalah layout dasar untuk aplikasi dengan struktur yang umum (misalnya top bar, floating button, dll.)
     Scaffold(
         modifier = modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection), // Menyambungkan scroll behavior dengan Scaffold
         topBar = {
+            // Menampilkan top app bar dengan judul dan tombol refresh
             CustomeTopAppBar(
-                // Menampilkan judul "Home Instruktur" dan tombol refresh untuk memuat ulang data instruktur
-                title = DestinasiHomeInst.titleRes,
-                canNavigateBack = true,
-                navigateUp = navigateBack,
-                scrollBehavior = scrollBehavior,
+                title = DestinasiHomeInst.titleRes, // Menampilkan judul yang diambil dari resource
+                canNavigateBack = true, // Menunjukkan tombol kembali di top bar
+                navigateUp = navigateBack, // Fungsi untuk kembali ke halaman sebelumnya
+                scrollBehavior = scrollBehavior, // Menghubungkan scroll behavior
                 onRefresh = {
+                    // Fungsi untuk memuat ulang data instruktur
                     viewModel.getInst()
                 }
             )
         },
         floatingActionButton = {
+            // Membuat tombol aksi mengambang (FAB) yang berada di bagian bawah tengah layar
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize() // Mengisi seluruh ruang di dalam box
             ) {
                 FloatingActionButton(
-                    onClick = navigateToItemEntry,
+                    onClick = navigateToItemEntry, // Fungsi yang dipanggil saat FAB diklik
                     modifier = Modifier
-                        .align(Alignment.BottomCenter) // Menempatkan FAB di bawah tengah
-                        .padding(8.dp) // Jarak FAB dari tepi
-                        .background(Color.Transparent), // Latar belakang transparan
-                    elevation = FloatingActionButtonDefaults.elevation(14.dp) // Hilangkan bayangan
+                        .align(Alignment.BottomCenter) // Menempatkan FAB di tengah bawah
+                        .padding(8.dp) // Memberikan jarak antara FAB dan tepi layar
+                        .background(Color.Transparent), // Latar belakang FAB transparan
+                    elevation = FloatingActionButtonDefaults.elevation(14.dp) // Mengatur bayangan pada FAB
                 ) {
+                    // Menampilkan ikon dan teks pada FAB
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalAlignment = Alignment.CenterVertically, // Menyusun ikon dan teks secara vertikal
+                        horizontalArrangement = Arrangement.spacedBy(4.dp) // Memberikan jarak antara ikon dan teks
                     ) {
+                        // Menampilkan ikon plus di dalam FAB
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add Instruktur",
+                            imageVector = Icons.Default.Add, // Ikon plus default
+                            contentDescription = "Add Instruktur", // Deskripsi untuk aksesibilitas
                             tint = Color.Black // Warna ikon
                         )
+                        // Menampilkan teks "Tambah Instruktur" di samping ikon
                         Text(
-                            text = "Tambah Instruktur",
+                            text = "Tambah Instruktur", // Teks yang ditampilkan
                             color = Color.Black // Warna teks
                         )
                     }
@@ -118,124 +133,142 @@ fun HomeInstView(
             }
         }
     ) { innerPadding ->
+        // Konten utama halaman, menampilkan status instruktur
         HomeStatus(
-            homeInstUiState = viewModel.instUIState,
-            retryAction = { viewModel.getInst() },
+            homeInstUiState = viewModel.instUIState, // Status UI instruktur (misalnya loading, error, dll.)
+            retryAction = { viewModel.getInst() }, // Aksi untuk mencoba memuat ulang data instruktur
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+                .padding(innerPadding) // Memberikan padding untuk menghindari tumpang tindih dengan elemen lainnya
+                .fillMaxSize(), // Mengisi seluruh ruang yang tersedia
+            // Fungsi yang dipanggil saat detail instruktur diklik
             onDetailInstClick = onDetailInstClick,
+            // Fungsi yang dipanggil saat instruktur ingin dihapus
             onDeleteInstClick = {
-                viewModel.deleteInst(it.id_instruktur ) // Mengambil data instruktur dari repository
-                viewModel.getInst() // Menghapus instruktur berdasarkan ID yang dipilih
+                // Menghapus instruktur berdasarkan ID
+                viewModel.deleteInst(it.id_instruktur)
+                // Memuat ulang data instruktur setelah penghapusan
+                viewModel.getInst()
             },
+            // Fungsi yang dipanggil saat instruktur ingin diedit
             onEditInstClick = onEditInstClick
         )
     }
 }
 
+// Fungsi HomeStatus digunakan untuk menampilkan UI berdasarkan status data instruktur
 @Composable
-fun HomeStatus( // menampilkan UI sesuai dengan status data instruktur
-    homeInstUiState: HomeInstUiState,
-    retryAction: () -> Unit, // untuk mencoba lagi jika pengambilan data gagal
-    modifier: Modifier = Modifier,
-    onDeleteInstClick: (Instruktur) -> Unit = {},
-    onDetailInstClick: (String) -> Unit,
-    onEditInstClick: (String) -> Unit
+fun HomeStatus(
+    homeInstUiState: HomeInstUiState, // Menyimpan status data instruktur (Loading, Success, Error)
+    retryAction: () -> Unit, // Fungsi untuk mencoba lagi jika pengambilan data gagal
+    modifier: Modifier = Modifier, // Modifier untuk penataan tampilan
+    onDeleteInstClick: (Instruktur) -> Unit = {}, // Fungsi yang dipanggil saat instruktur ingin dihapus
+    onDetailInstClick: (String) -> Unit, // Fungsi yang dipanggil saat detail instruktur diklik
+    onEditInstClick: (String) -> Unit // Fungsi yang dipanggil saat instruktur ingin diedit
 ) {
+    // Mengecek status dari homeInstUiState
     when (homeInstUiState) {
-        //Menampilkan gambar loading.
+        // Jika statusnya Loading, tampilkan gambar loading
         is HomeInstUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
 
-        // Menampilkan daftar instruktur jika data berhasil diambil.
+        // Jika statusnya Success, tampilkan daftar instruktur
         is HomeInstUiState.Success ->
-            if (
-                homeInstUiState.instruktur.isEmpty()){
-                return Box (
-                    modifier = modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center)
-                {
-                    Text(text = "Tidak ada Data Instruktur" )
+            // Jika daftar instruktur kosong, tampilkan pesan "Tidak ada Data Instruktur"
+            if (homeInstUiState.instruktur.isEmpty()) {
+                return Box(
+                    modifier = modifier.fillMaxSize(), // Mengisi seluruh ruang
+                    contentAlignment = Alignment.Center // Menempatkan teks di tengah
+                ) {
+                    Text(text = "Tidak ada Data Instruktur") // Tampilkan pesan
                 }
             } else {
+                // Jika ada data instruktur, tampilkan dalam tabel
                 InstTabel(
-                    instrukturList = homeInstUiState.instruktur,
-                    modifier = modifier.fillMaxWidth(),
-                    onDetailInstClick = { onDetailInstClick(it.id_instruktur) },
-                    onDeleteInstClick = { onDeleteInstClick(it) },
-                    onEditInstClick = { onEditInstClick(it.id_instruktur)}
+                    instrukturList = homeInstUiState.instruktur, // Daftar instruktur yang diambil
+                    modifier = modifier.fillMaxWidth(), // Lebar tabel mengikuti ukuran layar
+                    onDetailInstClick = { onDetailInstClick(it.id_instruktur) }, // Fungsi detail
+                    onDeleteInstClick = { onDeleteInstClick(it) }, // Fungsi hapus
+                    onEditInstClick = { onEditInstClick(it.id_instruktur) } // Fungsi edit
                 )
             }
 
-        // Menampilkan pesan error dengan tombol retry jika pengambilan data gagal.
+        // Jika statusnya Error, tampilkan pesan error dan tombol retry
         is HomeInstUiState.Error -> OnError(
-            retryAction,
-            modifier = modifier.fillMaxSize()
+            retryAction, // Aksi untuk mencoba lagi
+            modifier = modifier.fillMaxSize() // Mengisi seluruh ruang
         )
     }
 }
 
+// Fungsi OnLoading menampilkan gambar loading
 @Composable
-fun OnLoading( modifier: Modifier = Modifier){
+fun OnLoading(modifier: Modifier = Modifier) {
     Image(
-        modifier = modifier.size(4.dp),
-        painter = painterResource(R.drawable.load),
-        contentDescription = stringResource(R.string.loading)
+        modifier = modifier.size(4.dp), // Ukuran gambar loading
+        painter = painterResource(R.drawable.load), // Resource gambar loading
+        contentDescription = stringResource(R.string.loading) // Deskripsi gambar untuk aksesibilitas
     )
 }
 
+// Fungsi OnError menampilkan pesan error dan tombol untuk mencoba lagi
 @Composable
 fun OnError(
-    retryAction: () -> Unit,
+    retryAction: () -> Unit, // Fungsi yang dipanggil saat tombol retry ditekan
     modifier: Modifier = Modifier
-){
-    Column (
+) {
+    // Menampilkan UI error di tengah layar
+    Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
+        verticalArrangement = Arrangement.Center, // Mengatur agar konten berada di tengah secara vertikal
+        horizontalAlignment = Alignment.CenterHorizontally // Mengatur agar konten berada di tengah secara horizontal
+    ) {
+        // Menampilkan gambar error
         Image(
-            painter = painterResource(id = R.drawable.failed),
-            contentDescription = "Error Image",
-            modifier = Modifier
-                .size(100.dp) // Atur ukuran gambar menjadi 100x100 dp
+            painter = painterResource(id = R.drawable.failed), // Resource gambar error
+            contentDescription = "Error Image", // Deskripsi gambar untuk aksesibilitas
+            modifier = Modifier.size(100.dp) // Menentukan ukuran gambar menjadi 100x100 dp
         )
+        // Menampilkan teks error
         Text(
-            text = stringResource(R.string.loading_failed),
-            modifier = Modifier.padding(16.dp)
+            text = stringResource(R.string.loading_failed), // Pesan error
+            modifier = Modifier.padding(16.dp) // Memberikan padding di sekitar teks
         )
-        Button(onClick = retryAction)
-        {
-            Text(stringResource(R.string.retry))
+        // Tombol untuk mencoba lagi
+        Button(onClick = retryAction) {
+            Text(stringResource(R.string.retry)) // Teks tombol retry
         }
     }
 }
 
+// Fungsi InstTabel untuk menampilkan daftar instruktur dalam bentuk tabel
 @Composable
 fun InstTabel(
-    instrukturList: List<Instruktur>,
-    modifier: Modifier = Modifier,
-    onDetailInstClick: (Instruktur) -> Unit,
-    onDeleteInstClick: (Instruktur) -> Unit = {},
-    onEditInstClick: (Instruktur) -> Unit
+    instrukturList: List<Instruktur>, // Daftar instruktur yang ditampilkan
+    modifier: Modifier = Modifier, // Modifier untuk penataan tampilan
+    onDetailInstClick: (Instruktur) -> Unit, // Fungsi yang dipanggil saat detail instruktur diklik
+    onDeleteInstClick: (Instruktur) -> Unit = {}, // Fungsi yang dipanggil saat instruktur ingin dihapus
+    onEditInstClick: (Instruktur) -> Unit // Fungsi yang dipanggil saat instruktur ingin diedit
 ) {
-    var showDialog by remember { mutableStateOf(false) }  // State untuk menampilkan dialog
-    var instToDelete by remember { mutableStateOf<Instruktur?>(null) }  // Menyimpan instruktur yang akan dihapus
+    // State untuk menampilkan dialog konfirmasi penghapusan instruktur
+    var showDialog by remember { mutableStateOf(false) }
+    // Menyimpan instruktur yang akan dihapus
+    var instToDelete by remember { mutableStateOf<Instruktur?>(null) }
 
+    // LazyColumn untuk menampilkan daftar instruktur dalam bentuk kolom yang bisa di-scroll
     LazyColumn(
         modifier = modifier
             .padding(16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth() // Mengisi seluruh lebar layar
     ) {
-        // Header Tabel
+        // Header Tabel, menampilkan nama kolom
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(vertical = 14.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth() // Mengisi seluruh lebar
+                    .background(MaterialTheme.colorScheme.primary) // Memberikan warna latar belakang
+                    .padding(vertical = 14.dp), // Memberikan padding vertikal
+                horizontalArrangement = Arrangement.SpaceBetween // Menyusun elemen secara horizontal
             ) {
+                // Menampilkan header kolom dengan fungsi TableInst
                 TableInst(text = "ID", width = 40.dp, isHeader = true)
                 TableInst(text = "Nama", width = 40.dp, isHeader = true)
                 TableInst(text = "Email", width = 50.dp, isHeader = true)
@@ -243,37 +276,40 @@ fun InstTabel(
                 TableInst(text = "Deskripsi", width = 70.dp, isHeader = true)
                 TableInst(text = "Aksi", width = 30.dp, isHeader = true)
             }
-            Divider(color = Color.Gray, thickness = 1.dp) // Garis pemisah yang lebih soft
+            // Divider untuk pemisah antar header dan data
+            Divider(color = Color.Gray, thickness = 1.dp)
         }
 
-        // Baris Data Instruktur
+        // Menampilkan baris data instruktur
         items(instrukturList) { inst ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp) // Padding vertikal antara baris
                     .background(
+                        // Mengubah warna latar belakang secara bergantian untuk setiap baris
                         if (instrukturList.indexOf(inst) % 2 == 0) Color(0xFFF3F4F6)
-                        else
-                            Color(0xFFEDEEF2)
-                    ) // Alternating row colors
-                    .padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                        else Color(0xFFEDEEF2)
+                    )
+                    .padding(vertical = 12.dp), // Padding vertikal dalam baris
+                horizontalArrangement = Arrangement.SpaceBetween // Menyusun elemen secara horizontal
             ) {
+                // Menampilkan data instruktur dalam setiap kolom
                 TableInst(text = inst.id_instruktur.toString(), width = 40.dp)
                 TableInst(text = inst.namaInstruktur.take(4) + "...", width = 40.dp)
                 TableInst(text = inst.email.take(4) + "...", width = 50.dp)
                 TableInst(text = inst.noTelpInst.take(4) + "...", width = 50.dp)
                 TableInst(text = inst.deskripsi.take(4) + "...", width = 35.dp)
 
-                // Kolom Aksi
+                // Kolom untuk aksi (Detail, Edit, Hapus)
                 Column(
                     modifier = Modifier.width(65.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    verticalArrangement = Arrangement.spacedBy(4.dp), // Jarak antar tombol
+                    horizontalAlignment = Alignment.CenterHorizontally // Menyusun tombol di tengah secara horizontal
                 ) {
+                    // Tombol untuk melihat detail instruktur
                     OutlinedButton(
-                        onClick = { onDetailInstClick(inst) },
+                        onClick = { onDetailInstClick(inst) }, // Fungsi untuk melihat detail
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(32.dp),
@@ -281,8 +317,9 @@ fun InstTabel(
                     ) {
                         Text("Detail", style = MaterialTheme.typography.bodySmall)
                     }
+                    // Tombol untuk mengedit instruktur
                     OutlinedButton(
-                        onClick = { onEditInstClick(inst) },
+                        onClick = { onEditInstClick(inst) }, // Fungsi untuk mengedit instruktur
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(32.dp),
@@ -290,11 +327,11 @@ fun InstTabel(
                     ) {
                         Text("Edit", style = MaterialTheme.typography.bodySmall)
                     }
+                    // Tombol untuk menghapus instruktur
                     OutlinedButton(
-                        onClick =
-                        {
-                            instToDelete = inst
-                            showDialog = true
+                        onClick = {
+                            instToDelete = inst // Menyimpan instruktur yang akan dihapus
+                            showDialog = true // Menampilkan dialog konfirmasi
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -305,70 +342,77 @@ fun InstTabel(
                     }
                 }
             }
-            Divider(color = Color(0xFFDDDDDD), thickness = 1.dp) // Garis pemisah soft
+            // Divider untuk memisahkan setiap baris
+            Divider(color = Color(0xFFDDDDDD), thickness = 1.dp)
         }
     }
 
     // Dialog konfirmasi untuk menghapus data instruktur
     if (showDialog && instToDelete != null) {
         DeleteConfirmationDialog(
-            instruktur = instToDelete,
+            instruktur = instToDelete, // Instruktur yang akan dihapus
             onConfirm = {
-                onDeleteInstClick(instToDelete!!)
-                showDialog = false
+                onDeleteInstClick(instToDelete!!) // Menghapus instruktur jika tombol konfirmasi ditekan
+                showDialog = false // Menutup dialog
             },
-            onDismiss = { showDialog = false }
+            onDismiss = { showDialog = false } // Menutup dialog jika tombol batal ditekan
         )
     }
 }
 
+// Fungsi TableInst untuk menampilkan kolom tabel
 @Composable
 fun TableInst(
-    text: String,
-    width: Dp,
-    isHeader: Boolean = false)
-{
+    text: String, // Teks yang akan ditampilkan dalam kolom
+    width: Dp, // Lebar kolom
+    isHeader: Boolean = false // Menandakan apakah kolom ini adalah header tabel
+) {
     Box(
         modifier = Modifier
-            .width(width),
-        contentAlignment = Alignment.CenterStart
+            .width(width), // Mengatur lebar kolom
+        contentAlignment = Alignment.CenterStart // Menyusun teks di sebelah kiri
     ) {
+        // Menampilkan teks dengan gaya sesuai header atau bukan
         Text(
             text = text,
             style = if (isHeader) {
                 MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    fontWeight = FontWeight.Bold, // Menebalkan teks header
+                    color = MaterialTheme.colorScheme.onPrimary // Warna teks header
                 )
             } else {
                 MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground // Warna teks untuk baris data
                 )
             }
         )
     }
 }
 
-
 @Composable
 fun DeleteConfirmationDialog(
     instruktur: Instruktur?,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onConfirm: () -> Unit, // Fungsi yang dijalankan jika pengguna mengonfirmasi penghapusan
+    onDismiss: () -> Unit // Fungsi yang dijalankan jika pengguna membatalkan dialog
 ) {
+    // Membuat dialog konfirmasi dengan AlertDialog
     AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Konfirmasi Hapus") },
-        text = { Text("Apakah Anda yakin ingin menghapus data instruktur " +
-                "${instruktur?.namaInstruktur}?") },
+        onDismissRequest = onDismiss, // Fungsi untuk membatalkan dialog jika pengguna mengklik area luar dialog
+        title = { Text("Konfirmasi Hapus") }, // Judul dialog
+        text = {
+            // Pesan teks yang menanyakan apakah pengguna yakin akan menghapus instruktur
+            Text("Apakah Anda yakin ingin menghapus data instruktur ${instruktur?.namaInstruktur}?")
+        },
         confirmButton = {
+            // Tombol untuk mengonfirmasi penghapusan
             Button(onClick = onConfirm) {
-                Text("Hapus")
+                Text("Hapus") // Teks yang muncul pada tombol konfirmasi
             }
         },
         dismissButton = {
+            // Tombol untuk membatalkan penghapusan
             Button(onClick = onDismiss) {
-                Text("Batal")
+                Text("Batal") // Teks yang muncul pada tombol batal
             }
         }
     )
